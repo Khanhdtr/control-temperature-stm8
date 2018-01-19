@@ -17,6 +17,9 @@ Symbol Table
     _CLK_LSICmd                                                    ****** GX
     _CLK_PeripheralClockConfig                                     ****** GX
     _CLK_SYSCLKConfig                                              ****** GX
+    _GPIO_Init                                                     ****** GX
+    _GPIO_WriteHigh                                                ****** GX
+    _GPIO_WriteLow                                                 ****** GX
     _TIM4_ClearITPendingBit                                        ****** GX
   8 _TIM4_UPD_OVF_IRQHandler                                       000070 GR
     _TIMER_Inc                                                     ****** GX
@@ -28,7 +31,8 @@ Symbol Table
   3 __start__stack                                                 000000 R
   8 _clock_setup                                                   000000 GR
   8 _delay                                                         00007B GR
-  8 _main                                                          000087 GR
+  8 _delay_ms                                                      000087 GR
+  8 _main                                                          00009F GR
   1 _tick                                                          000000 GR
     l_DATA                                                         ****** GX
     l_INITIALIZER                                                  ****** GX
@@ -36,6 +40,7 @@ Symbol Table
     s_GSINIT                                                       ****** GX
     s_INITIALIZED                                                  ****** GX
     s_INITIALIZER                                                  ****** GX
+
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
 Hexadecimal [24-Bits]
@@ -50,7 +55,7 @@ Area Table
    5 HOME                                       size     83   flags    0
    6 GSINIT                                     size     1A   flags    0
    7 GSFINAL                                    size      3   flags    0
-   8 CODE                                       size     91   flags    0
+   8 CODE                                       size     DC   flags    0
    9 INITIALIZER                                size      0   flags    0
    A CABS                                       size      0   flags    8
 

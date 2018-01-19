@@ -9,12 +9,16 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
+	.globl _delay_ms
 	.globl _delay
 	.globl _TIM4_UPD_OVF_IRQHandler
 	.globl _clock_setup
 	.globl _TIMER_Inc
 	.globl _TIMER_Init
 	.globl _TIM4_ClearITPendingBit
+	.globl _GPIO_WriteLow
+	.globl _GPIO_WriteHigh
+	.globl _GPIO_Init
 	.globl _CLK_GetFlagStatus
 	.globl _CLK_SYSCLKConfig
 	.globl _CLK_HSIPrescalerConfig
@@ -214,13 +218,13 @@ _TIM4_UPD_OVF_IRQHandler:
 ;	user/main.c: 46: TIMER_Inc();
 	call	_TIMER_Inc
 	iret
-;	user/main.c: 69: void delay(uint16_t x)
+;	user/main.c: 68: void delay(uint16_t x)
 ;	-----------------------------------------
 ;	 function delay
 ;	-----------------------------------------
 _delay:
 	pushw	x
-;	user/main.c: 71: while(x--);
+;	user/main.c: 70: while(x--);
 	ldw	x, (0x05, sp)
 00101$:
 	ldw	(0x01, sp), x
@@ -229,19 +233,72 @@ _delay:
 	jrne	00101$
 	popw	x
 	ret
-;	user/main.c: 74: void main() 
+;	user/main.c: 72: void delay_ms(int time){
+;	-----------------------------------------
+;	 function delay_ms
+;	-----------------------------------------
+_delay_ms:
+	pushw	x
+;	user/main.c: 73: while(time--){
+	ldw	x, (0x05, sp)
+00101$:
+	ldw	(0x01, sp), x
+	decw	x
+	ldw	y, (0x01, sp)
+	jreq	00104$
+;	user/main.c: 74: delay(1000);
+	pushw	x
+	push	#0xe8
+	push	#0x03
+	call	_delay
+	popw	x
+	popw	x
+	jra	00101$
+00104$:
+	popw	x
+	ret
+;	user/main.c: 79: void main() 
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	user/main.c: 77: clock_setup();
+;	user/main.c: 81: GPIO_Init(GPIOA,GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_SLOW);
+	push	#0xc0
+	push	#0x02
+	push	#0x00
+	push	#0x50
+	call	_GPIO_Init
+	addw	sp, #4
+;	user/main.c: 83: clock_setup();
 	call	_clock_setup
-;	user/main.c: 79: TIMER_Init();
+;	user/main.c: 85: TIMER_Init();
 	call	_TIMER_Init
-;	user/main.c: 81: enableInterrupts();
+;	user/main.c: 87: enableInterrupts();
 	rim
-;	user/main.c: 82: while(1)
+;	user/main.c: 88: while(1)
 00102$:
+;	user/main.c: 90: GPIO_WriteHigh(GPIOA,GPIO_PIN_1);
+	push	#0x02
+	push	#0x00
+	push	#0x50
+	call	_GPIO_WriteHigh
+	addw	sp, #3
+;	user/main.c: 91: delay_ms(1000);
+	push	#0xe8
+	push	#0x03
+	call	_delay_ms
+	popw	x
+;	user/main.c: 92: GPIO_WriteLow(GPIOA,GPIO_PIN_1);
+	push	#0x02
+	push	#0x00
+	push	#0x50
+	call	_GPIO_WriteLow
+	addw	sp, #3
+;	user/main.c: 93: delay_ms(1000);
+	push	#0xe8
+	push	#0x03
+	call	_delay_ms
+	popw	x
 	jra	00102$
 	ret
 	.area CODE

@@ -64,15 +64,21 @@ INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
 //   IWDG_ReloadCounter();
 //   /* Enable IWDG (the LSI oscillator will be enabled by hardware) */
 //   IWDG_Enable();
-// }
-
+// 
 void delay(uint16_t x)
 {
   while(x--);
 }
+void delay_ms(int time){
+  while(time--){
+    delay(1000);
+  }
+}
+
 
 void main() 
 {
+  GPIO_Init(GPIOA,GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_SLOW);
  
   clock_setup();
 
@@ -81,7 +87,10 @@ void main()
   enableInterrupts();
   while(1)
   {
-    ;
+    GPIO_WriteHigh(GPIOA,GPIO_PIN_1);
+    delay_ms(1000);
+    GPIO_WriteLow(GPIOA,GPIO_PIN_1);
+    delay_ms(1000);
   }
   
   
