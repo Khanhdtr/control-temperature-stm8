@@ -1,0 +1,40 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 1.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000001 L
+  7 _BH1750_init                                                   000024 GR
+  7 _BH1750_read_word                                              000070 GR
+  7 _BH1750_write                                                  000033 GR
+    _I2C_AcknowledgeConfig                                         ****** GX
+    _I2C_CheckEvent                                                ****** GX
+    _I2C_GenerateSTART                                             ****** GX
+    _I2C_GenerateSTOP                                              ****** GX
+    _I2C_GetFlagStatus                                             ****** GX
+    _I2C_ReceiveData                                               ****** GX
+    _I2C_Send7bitAddress                                           ****** GX
+    _I2C_SendData                                                  ****** GX
+  7 _delay                                                         000000 GR
+  7 _delay_ms                                                      00000C GR
+  7 _get_lux_value                                                 000109 GR
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size      0   flags    0
+   1 DATA                                       size      0   flags    0
+   2 INITIALIZED                                size      0   flags    0
+   3 DABS                                       size      0   flags    8
+   4 HOME                                       size      0   flags    0
+   5 GSINIT                                     size      0   flags    0
+   6 GSFINAL                                    size      0   flags    0
+   7 CODE                                       size    16A   flags    0
+   8 INITIALIZER                                size      0   flags    0
+   9 CABS                                       size      0   flags    8
+

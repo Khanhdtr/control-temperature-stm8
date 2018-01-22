@@ -19,5 +19,9 @@
 
 
 void IWDG_Config(void);
+void I2C_setup(void);
+void GPIO_setup(void);
+void Led_manager (void);
+void clock_setup(void);
 
 #endif /* __MAIN_H */

@@ -9,17 +9,22 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
-	.globl _delay_ms
-	.globl _delay
 	.globl _TIM4_UPD_OVF_IRQHandler
-	.globl _clock_setup
+	.globl _Printf
+	.globl _SetupSerialPort
+	.globl _TIMER_CheckTimeMS
+	.globl _TIMER_InitTime
 	.globl _TIMER_Inc
 	.globl _TIMER_Init
 	.globl _TIM4_ClearITPendingBit
+	.globl _I2C_Cmd
+	.globl _I2C_Init
+	.globl _I2C_DeInit
 	.globl _GPIO_WriteLow
 	.globl _GPIO_WriteHigh
 	.globl _GPIO_Init
 	.globl _CLK_GetFlagStatus
+	.globl _CLK_GetClockFreq
 	.globl _CLK_SYSCLKConfig
 	.globl _CLK_HSIPrescalerConfig
 	.globl _CLK_ClockSwitchConfig
@@ -29,7 +34,12 @@
 	.globl _CLK_HSICmd
 	.globl _CLK_HSECmd
 	.globl _CLK_DeInit
+	.globl _ToggleVar
 	.globl _tick
+	.globl _clock_setup
+	.globl _I2C_setup
+	.globl _GPIO_setup
+	.globl _Led_manager
 ;--------------------------------------------------------
 ; ram data
 ;--------------------------------------------------------
@@ -40,6 +50,8 @@ _tick::
 ; ram data
 ;--------------------------------------------------------
 	.area INITIALIZED
+_ToggleVar::
+	.ds 1
 ;--------------------------------------------------------
 ; Stack segment in internal ram 
 ;--------------------------------------------------------
@@ -128,26 +140,26 @@ __sdcc_program_startup:
 ; code
 ;--------------------------------------------------------
 	.area CODE
-;	user/main.c: 23: void clock_setup(void)
+;	user/main.c: 27: void clock_setup(void)
 ;	-----------------------------------------
 ;	 function clock_setup
 ;	-----------------------------------------
 _clock_setup:
-;	user/main.c: 25: CLK_DeInit();
+;	user/main.c: 29: CLK_DeInit();
 	call	_CLK_DeInit
-;	user/main.c: 26: CLK_HSECmd(DISABLE);
+;	user/main.c: 30: CLK_HSECmd(DISABLE);
 	push	#0x00
 	call	_CLK_HSECmd
 	pop	a
-;	user/main.c: 27: CLK_LSICmd(DISABLE);
+;	user/main.c: 31: CLK_LSICmd(DISABLE);
 	push	#0x00
 	call	_CLK_LSICmd
 	pop	a
-;	user/main.c: 28: CLK_HSICmd(ENABLE);
+;	user/main.c: 32: CLK_HSICmd(ENABLE);
 	push	#0x01
 	call	_CLK_HSICmd
 	pop	a
-;	user/main.c: 29: while(CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == FALSE);
+;	user/main.c: 33: while(CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == FALSE);
 00101$:
 	push	#0x02
 	push	#0x01
@@ -155,152 +167,217 @@ _clock_setup:
 	popw	x
 	tnz	a
 	jreq	00101$
-;	user/main.c: 30: CLK_ClockSwitchCmd(ENABLE);
+;	user/main.c: 34: CLK_ClockSwitchCmd(ENABLE);
 	push	#0x01
 	call	_CLK_ClockSwitchCmd
 	pop	a
-;	user/main.c: 31: CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+;	user/main.c: 36: CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
 	push	#0x00
 	call	_CLK_HSIPrescalerConfig
 	pop	a
-;	user/main.c: 32: CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV2);
-	push	#0x81
+;	user/main.c: 39: CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1 );
+	push	#0x80
 	call	_CLK_SYSCLKConfig
 	pop	a
-;	user/main.c: 33: CLK_ClockSwitchConfig(CLK_SWITCHMODE_AUTO, CLK_SOURCE_HSI, DISABLE, CLK_CURRENTCLOCKSTATE_ENABLE);
+;	user/main.c: 40: CLK_ClockSwitchConfig(CLK_SWITCHMODE_AUTO, CLK_SOURCE_HSI, DISABLE, CLK_CURRENTCLOCKSTATE_ENABLE);
 	push	#0x01
 	push	#0x00
 	push	#0xe1
 	push	#0x01
 	call	_CLK_ClockSwitchConfig
 	addw	sp, #4
-;	user/main.c: 35: CLK_PeripheralClockConfig(CLK_PERIPHERAL_ADC, DISABLE);
+;	user/main.c: 42: CLK_PeripheralClockConfig(CLK_PERIPHERAL_SPI, DISABLE);
+	push	#0x00
+	push	#0x01
+	call	_CLK_PeripheralClockConfig
+	popw	x
+;	user/main.c: 43: CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, ENABLE);
+	push	#0x01
+	push	#0x00
+	call	_CLK_PeripheralClockConfig
+	popw	x
+;	user/main.c: 44: CLK_PeripheralClockConfig(CLK_PERIPHERAL_ADC, DISABLE);
 	push	#0x00
 	push	#0x13
 	call	_CLK_PeripheralClockConfig
 	popw	x
-;	user/main.c: 36: CLK_PeripheralClockConfig(CLK_PERIPHERAL_AWU, DISABLE);
+;	user/main.c: 45: CLK_PeripheralClockConfig(CLK_PERIPHERAL_AWU, DISABLE);
 	push	#0x00
 	push	#0x12
 	call	_CLK_PeripheralClockConfig
 	popw	x
-;	user/main.c: 37: CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, DISABLE);
+;	user/main.c: 46: CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, DISABLE);
 	push	#0x00
 	push	#0x03
 	call	_CLK_PeripheralClockConfig
 	popw	x
-;	user/main.c: 38: CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER1, DISABLE);
+;	user/main.c: 47: CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER1, DISABLE);
 	push	#0x00
 	push	#0x07
 	call	_CLK_PeripheralClockConfig
 	popw	x
-;	user/main.c: 39: CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, DISABLE);
+;	user/main.c: 48: CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, DISABLE);
 	push	#0x00
 	push	#0x05
 	call	_CLK_PeripheralClockConfig
 	popw	x
-;	user/main.c: 40: CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER4, ENABLE);
+;	user/main.c: 49: CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER4, ENABLE);
 	push	#0x01
 	push	#0x04
 	call	_CLK_PeripheralClockConfig
 	popw	x
 	ret
-;	user/main.c: 43: INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
+;	user/main.c: 52: INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
 ;	-----------------------------------------
 ;	 function TIM4_UPD_OVF_IRQHandler
 ;	-----------------------------------------
 _TIM4_UPD_OVF_IRQHandler:
 	div	x, a
-;	user/main.c: 45: TIM4_ClearITPendingBit(TIM4_IT_UPDATE);
+;	user/main.c: 54: TIM4_ClearITPendingBit(TIM4_IT_UPDATE);
 	push	#0x01
 	call	_TIM4_ClearITPendingBit
 	pop	a
-;	user/main.c: 46: TIMER_Inc();
+;	user/main.c: 55: TIMER_Inc();
 	call	_TIMER_Inc
 	iret
-;	user/main.c: 68: void delay(uint16_t x)
+;	user/main.c: 59: void I2C_setup(void)
 ;	-----------------------------------------
-;	 function delay
+;	 function I2C_setup
 ;	-----------------------------------------
-_delay:
+_I2C_setup:
+;	user/main.c: 61: I2C_DeInit();
+	call	_I2C_DeInit
+;	user/main.c: 67: (CLK_GetClockFreq() / 1000000));
+	call	_CLK_GetClockFreq
+	push	#0x40
+	push	#0x42
+	push	#0x0f
+	push	#0x00
 	pushw	x
-;	user/main.c: 70: while(x--);
-	ldw	x, (0x05, sp)
-00101$:
-	ldw	(0x01, sp), x
-	decw	x
-	ldw	y, (0x01, sp)
-	jrne	00101$
-	popw	x
+	pushw	y
+	call	__divulong
+	addw	sp, #8
+	ld	a, xl
+;	user/main.c: 62: I2C_Init(100000, 
+	push	a
+	push	#0x00
+	push	#0x01
+	push	#0x00
+	push	#0x46
+	push	#0x00
+	push	#0xa0
+	push	#0x86
+	push	#0x01
+	push	#0x00
+	call	_I2C_Init
+	addw	sp, #10
+;	user/main.c: 68: I2C_Cmd(ENABLE);
+	push	#0x01
+	call	_I2C_Cmd
+	pop	a
 	ret
-;	user/main.c: 72: void delay_ms(int time){
+;	user/main.c: 71: void GPIO_setup(void)
 ;	-----------------------------------------
-;	 function delay_ms
+;	 function GPIO_setup
 ;	-----------------------------------------
-_delay_ms:
-	pushw	x
-;	user/main.c: 73: while(time--){
-	ldw	x, (0x05, sp)
-00101$:
-	ldw	(0x01, sp), x
-	decw	x
-	ldw	y, (0x01, sp)
-	jreq	00104$
-;	user/main.c: 74: delay(1000);
-	pushw	x
-	push	#0xe8
-	push	#0x03
-	call	_delay
-	popw	x
-	popw	x
-	jra	00101$
-00104$:
-	popw	x
-	ret
-;	user/main.c: 79: void main() 
-;	-----------------------------------------
-;	 function main
-;	-----------------------------------------
-_main:
-;	user/main.c: 81: GPIO_Init(GPIOA,GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_SLOW);
+_GPIO_setup:
+;	user/main.c: 73: GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_OUT_OD_HIZ_FAST);
+	push	#0xb0
+	push	#0x10
+	push	#0x05
+	push	#0x50
+	call	_GPIO_Init
+	addw	sp, #4
+;	user/main.c: 74: GPIO_Init(GPIOB, GPIO_PIN_5, GPIO_MODE_OUT_OD_HIZ_FAST);
+	push	#0xb0
+	push	#0x20
+	push	#0x05
+	push	#0x50
+	call	_GPIO_Init
+	addw	sp, #4
+;	user/main.c: 75: GPIO_Init(GPIOA,GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_SLOW);
 	push	#0xc0
 	push	#0x02
 	push	#0x00
 	push	#0x50
 	call	_GPIO_Init
 	addw	sp, #4
-;	user/main.c: 83: clock_setup();
-	call	_clock_setup
-;	user/main.c: 85: TIMER_Init();
-	call	_TIMER_Init
-;	user/main.c: 87: enableInterrupts();
-	rim
-;	user/main.c: 88: while(1)
+	ret
+;	user/main.c: 95: void Led_manager (void)
+;	-----------------------------------------
+;	 function Led_manager
+;	-----------------------------------------
+_Led_manager:
+;	user/main.c: 97: if(TIMER_CheckTimeMS(&tick, 1000) == 0) ToggleVar = ~ToggleVar;  
+	ldw	x, #_tick+0
+	push	#0xe8
+	push	#0x03
+	push	#0x00
+	push	#0x00
+	pushw	x
+	call	_TIMER_CheckTimeMS
+	addw	sp, #6
+	tnz	a
+	jrne	00102$
+	ld	a, _ToggleVar+0
+	cpl	a
+	ld	_ToggleVar+0, a
 00102$:
-;	user/main.c: 90: GPIO_WriteHigh(GPIOA,GPIO_PIN_1);
+;	user/main.c: 98: if(ToggleVar == 0x01)   
+	ld	a, _ToggleVar+0
+	cp	a, #0x01
+	jrne	00104$
+;	user/main.c: 99: GPIO_WriteHigh(GPIOA,GPIO_PIN_1);   
 	push	#0x02
 	push	#0x00
 	push	#0x50
 	call	_GPIO_WriteHigh
 	addw	sp, #3
-;	user/main.c: 91: delay_ms(1000);
-	push	#0xe8
-	push	#0x03
-	call	_delay_ms
-	popw	x
-;	user/main.c: 92: GPIO_WriteLow(GPIOA,GPIO_PIN_1);
+	ret
+00104$:
+;	user/main.c: 101: GPIO_WriteLow(GPIOA,GPIO_PIN_1);
 	push	#0x02
 	push	#0x00
 	push	#0x50
 	call	_GPIO_WriteLow
 	addw	sp, #3
-;	user/main.c: 93: delay_ms(1000);
-	push	#0xe8
-	push	#0x03
-	call	_delay_ms
+	ret
+;	user/main.c: 105: void main() 
+;	-----------------------------------------
+;	 function main
+;	-----------------------------------------
+_main:
+;	user/main.c: 109: clock_setup();
+	call	_clock_setup
+;	user/main.c: 110: GPIO_setup();
+	call	_GPIO_setup
+;	user/main.c: 113: TIMER_Init();
+	call	_TIMER_Init
+;	user/main.c: 114: SetupSerialPort();
+	call	_SetupSerialPort
+;	user/main.c: 116: enableInterrupts();
+	rim
+;	user/main.c: 117: TIMER_InitTime(&tick);
+	ldw	x, #_tick+0
+	pushw	x
+	call	_TIMER_InitTime
+	popw	x
+;	user/main.c: 118: while(1)
+00102$:
+;	user/main.c: 120: Led_manager ();
+	call	_Led_manager
+;	user/main.c: 121: Printf("Hello from my program");
+	ldw	x, #___str_0+0
+	pushw	x
+	call	_Printf
 	popw	x
 	jra	00102$
 	ret
 	.area CODE
+___str_0:
+	.ascii "Hello from my program"
+	.db 0x00
 	.area INITIALIZER
+__xinit__ToggleVar:
+	.db #0x01	; 1
 	.area CABS (ABS)

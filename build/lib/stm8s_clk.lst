@@ -237,19 +237,19 @@
       0000B5 A4 0F            [ 1]  237 	and	a, #0x0f
       0000B7 88               [ 1]  238 	push	a
       0000B8 A6 01            [ 1]  239 	ld	a, #0x01
-      0000BA 6B 03            [ 1]  240 	ld	(0x03, sp), a
+      0000BA 6B 02            [ 1]  240 	ld	(0x02, sp), a
       0000BC 84               [ 1]  241 	pop	a
       0000BD 4D               [ 1]  242 	tnz	a
       0000BE 27 05            [ 1]  243 	jreq	00125$
       0000C0                        244 00124$:
-      0000C0 08 02            [ 1]  245 	sll	(0x02, sp)
+      0000C0 08 01            [ 1]  245 	sll	(0x01, sp)
       0000C2 4A               [ 1]  246 	dec	a
       0000C3 26 FB            [ 1]  247 	jrne	00124$
       0000C5                        248 00125$:
                                     249 ;	lib/stm8s_clk.c: 262: CLK->PCKENR1 &= (uint8_t)(~(uint8_t)(((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F))));
-      0000C5 7B 02            [ 1]  250 	ld	a, (0x02, sp)
+      0000C5 7B 01            [ 1]  250 	ld	a, (0x01, sp)
       0000C7 43               [ 1]  251 	cpl	a
-      0000C8 6B 01            [ 1]  252 	ld	(0x01, sp), a
+      0000C8 6B 02            [ 1]  252 	ld	(0x02, sp), a
                                     253 ;	lib/stm8s_clk.c: 252: if (((uint8_t)CLK_Peripheral & (uint8_t)0x10) == 0x00)
       0000CA 7B 05            [ 1]  254 	ld	a, (0x05, sp)
       0000CC A5 10            [ 1]  255 	bcp	a, #0x10
@@ -260,7 +260,7 @@
                                     260 ;	lib/stm8s_clk.c: 257: CLK->PCKENR1 |= (uint8_t)((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F));
       0000D4 AE 50 C7         [ 2]  261 	ldw	x, #0x50c7
       0000D7 F6               [ 1]  262 	ld	a, (x)
-      0000D8 1A 02            [ 1]  263 	or	a, (0x02, sp)
+      0000D8 1A 01            [ 1]  263 	or	a, (0x01, sp)
       0000DA AE 50 C7         [ 2]  264 	ldw	x, #0x50c7
       0000DD F7               [ 1]  265 	ld	(x), a
       0000DE 20 26            [ 2]  266 	jra	00110$
@@ -268,7 +268,7 @@
                                     268 ;	lib/stm8s_clk.c: 262: CLK->PCKENR1 &= (uint8_t)(~(uint8_t)(((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F))));
       0000E0 AE 50 C7         [ 2]  269 	ldw	x, #0x50c7
       0000E3 F6               [ 1]  270 	ld	a, (x)
-      0000E4 14 01            [ 1]  271 	and	a, (0x01, sp)
+      0000E4 14 02            [ 1]  271 	and	a, (0x02, sp)
       0000E6 AE 50 C7         [ 2]  272 	ldw	x, #0x50c7
       0000E9 F7               [ 1]  273 	ld	(x), a
       0000EA 20 1A            [ 2]  274 	jra	00110$
@@ -279,7 +279,7 @@
                                     279 ;	lib/stm8s_clk.c: 270: CLK->PCKENR2 |= (uint8_t)((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F));
       0000F0 AE 50 CA         [ 2]  280 	ldw	x, #0x50ca
       0000F3 F6               [ 1]  281 	ld	a, (x)
-      0000F4 1A 02            [ 1]  282 	or	a, (0x02, sp)
+      0000F4 1A 01            [ 1]  282 	or	a, (0x01, sp)
       0000F6 AE 50 CA         [ 2]  283 	ldw	x, #0x50ca
       0000F9 F7               [ 1]  284 	ld	(x), a
       0000FA 20 0A            [ 2]  285 	jra	00110$
@@ -287,7 +287,7 @@
                                     287 ;	lib/stm8s_clk.c: 275: CLK->PCKENR2 &= (uint8_t)(~(uint8_t)(((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F))));
       0000FC AE 50 CA         [ 2]  288 	ldw	x, #0x50ca
       0000FF F6               [ 1]  289 	ld	a, (x)
-      000100 14 01            [ 1]  290 	and	a, (0x01, sp)
+      000100 14 02            [ 1]  290 	and	a, (0x02, sp)
       000102 AE 50 CA         [ 2]  291 	ldw	x, #0x50ca
       000105 F7               [ 1]  292 	ld	(x), a
       000106                        293 00110$:

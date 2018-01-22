@@ -1,0 +1,347 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 3.6.0 #9615 (Mac OS X x86_64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module bh1750
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _delay_ms
+                                     12 	.globl _delay
+                                     13 	.globl _I2C_GetFlagStatus
+                                     14 	.globl _I2C_CheckEvent
+                                     15 	.globl _I2C_SendData
+                                     16 	.globl _I2C_Send7bitAddress
+                                     17 	.globl _I2C_ReceiveData
+                                     18 	.globl _I2C_AcknowledgeConfig
+                                     19 	.globl _I2C_GenerateSTOP
+                                     20 	.globl _I2C_GenerateSTART
+                                     21 	.globl _BH1750_init
+                                     22 	.globl _BH1750_write
+                                     23 	.globl _BH1750_read_word
+                                     24 	.globl _get_lux_value
+                                     25 ;--------------------------------------------------------
+                                     26 ; ram data
+                                     27 ;--------------------------------------------------------
+                                     28 	.area DATA
+                                     29 ;--------------------------------------------------------
+                                     30 ; ram data
+                                     31 ;--------------------------------------------------------
+                                     32 	.area INITIALIZED
+                                     33 ;--------------------------------------------------------
+                                     34 ; absolute external ram data
+                                     35 ;--------------------------------------------------------
+                                     36 	.area DABS (ABS)
+                                     37 ;--------------------------------------------------------
+                                     38 ; global & static initialisations
+                                     39 ;--------------------------------------------------------
+                                     40 	.area HOME
+                                     41 	.area GSINIT
+                                     42 	.area GSFINAL
+                                     43 	.area GSINIT
+                                     44 ;--------------------------------------------------------
+                                     45 ; Home
+                                     46 ;--------------------------------------------------------
+                                     47 	.area HOME
+                                     48 	.area HOME
+                                     49 ;--------------------------------------------------------
+                                     50 ; code
+                                     51 ;--------------------------------------------------------
+                                     52 	.area CODE
+                                     53 ;	user/bh1750.c: 4: void delay(uint16_t x)
+                                     54 ;	-----------------------------------------
+                                     55 ;	 function delay
+                                     56 ;	-----------------------------------------
+      000000                         57 _delay:
+      000000 89               [ 2]   58 	pushw	x
+                                     59 ;	user/bh1750.c: 6: while(x--);
+      000001 1E 05            [ 2]   60 	ldw	x, (0x05, sp)
+      000003                         61 00101$:
+      000003 1F 01            [ 2]   62 	ldw	(0x01, sp), x
+      000005 5A               [ 2]   63 	decw	x
+      000006 16 01            [ 2]   64 	ldw	y, (0x01, sp)
+      000008 26 F9            [ 1]   65 	jrne	00101$
+      00000A 85               [ 2]   66 	popw	x
+      00000B 81               [ 4]   67 	ret
+                                     68 ;	user/bh1750.c: 8: void delay_ms(int time){
+                                     69 ;	-----------------------------------------
+                                     70 ;	 function delay_ms
+                                     71 ;	-----------------------------------------
+      00000C                         72 _delay_ms:
+      00000C 89               [ 2]   73 	pushw	x
+                                     74 ;	user/bh1750.c: 9: while(time--){
+      00000D 1E 05            [ 2]   75 	ldw	x, (0x05, sp)
+      00000F                         76 00101$:
+      00000F 1F 01            [ 2]   77 	ldw	(0x01, sp), x
+      000011 5A               [ 2]   78 	decw	x
+      000012 16 01            [ 2]   79 	ldw	y, (0x01, sp)
+      000014 27 0C            [ 1]   80 	jreq	00104$
+                                     81 ;	user/bh1750.c: 10: delay(1000);
+      000016 89               [ 2]   82 	pushw	x
+      000017 4B E8            [ 1]   83 	push	#0xe8
+      000019 4B 03            [ 1]   84 	push	#0x03
+      00001B CDr00r00         [ 4]   85 	call	_delay
+      00001E 85               [ 2]   86 	popw	x
+      00001F 85               [ 2]   87 	popw	x
+      000020 20 ED            [ 2]   88 	jra	00101$
+      000022                         89 00104$:
+      000022 85               [ 2]   90 	popw	x
+      000023 81               [ 4]   91 	ret
+                                     92 ;	user/bh1750.c: 14: void BH1750_init(void)
+                                     93 ;	-----------------------------------------
+                                     94 ;	 function BH1750_init
+                                     95 ;	-----------------------------------------
+      000024                         96 _BH1750_init:
+                                     97 ;	user/bh1750.c: 16: delay_ms(10);  
+      000024 4B 0A            [ 1]   98 	push	#0x0a
+      000026 4B 00            [ 1]   99 	push	#0x00
+      000028 CDr00r0C         [ 4]  100 	call	_delay_ms
+      00002B 85               [ 2]  101 	popw	x
+                                    102 ;	user/bh1750.c: 17: BH1750_write(power_down);
+      00002C 4B 00            [ 1]  103 	push	#0x00
+      00002E CDr00r33         [ 4]  104 	call	_BH1750_write
+      000031 84               [ 1]  105 	pop	a
+      000032 81               [ 4]  106 	ret
+                                    107 ;	user/bh1750.c: 21: void BH1750_write(unsigned char cmd)
+                                    108 ;	-----------------------------------------
+                                    109 ;	 function BH1750_write
+                                    110 ;	-----------------------------------------
+      000033                        111 _BH1750_write:
+                                    112 ;	user/bh1750.c: 23: I2C_GenerateSTART(ENABLE);
+      000033 4B 01            [ 1]  113 	push	#0x01
+      000035 CDr00r00         [ 4]  114 	call	_I2C_GenerateSTART
+      000038 84               [ 1]  115 	pop	a
+                                    116 ;	user/bh1750.c: 24: while(!I2C_CheckEvent(I2C_EVENT_MASTER_MODE_SELECT));
+      000039                        117 00101$:
+      000039 4B 01            [ 1]  118 	push	#0x01
+      00003B 4B 03            [ 1]  119 	push	#0x03
+      00003D CDr00r00         [ 4]  120 	call	_I2C_CheckEvent
+      000040 85               [ 2]  121 	popw	x
+      000041 4D               [ 1]  122 	tnz	a
+      000042 27 F5            [ 1]  123 	jreq	00101$
+                                    124 ;	user/bh1750.c: 26: I2C_Send7bitAddress(BH1750_addr, I2C_DIRECTION_TX); 
+      000044 4B 00            [ 1]  125 	push	#0x00
+      000046 4B 46            [ 1]  126 	push	#0x46
+      000048 CDr00r00         [ 4]  127 	call	_I2C_Send7bitAddress
+      00004B 85               [ 2]  128 	popw	x
+                                    129 ;	user/bh1750.c: 27: while(!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+      00004C                        130 00104$:
+      00004C 4B 82            [ 1]  131 	push	#0x82
+      00004E 4B 07            [ 1]  132 	push	#0x07
+      000050 CDr00r00         [ 4]  133 	call	_I2C_CheckEvent
+      000053 85               [ 2]  134 	popw	x
+      000054 4D               [ 1]  135 	tnz	a
+      000055 27 F5            [ 1]  136 	jreq	00104$
+                                    137 ;	user/bh1750.c: 29: I2C_SendData(cmd);
+      000057 7B 03            [ 1]  138 	ld	a, (0x03, sp)
+      000059 88               [ 1]  139 	push	a
+      00005A CDr00r00         [ 4]  140 	call	_I2C_SendData
+      00005D 84               [ 1]  141 	pop	a
+                                    142 ;	user/bh1750.c: 30: while(!I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+      00005E                        143 00107$:
+      00005E 4B 84            [ 1]  144 	push	#0x84
+      000060 4B 07            [ 1]  145 	push	#0x07
+      000062 CDr00r00         [ 4]  146 	call	_I2C_CheckEvent
+      000065 85               [ 2]  147 	popw	x
+      000066 4D               [ 1]  148 	tnz	a
+      000067 27 F5            [ 1]  149 	jreq	00107$
+                                    150 ;	user/bh1750.c: 32: I2C_GenerateSTOP(ENABLE);   
+      000069 4B 01            [ 1]  151 	push	#0x01
+      00006B CDr00r00         [ 4]  152 	call	_I2C_GenerateSTOP
+      00006E 84               [ 1]  153 	pop	a
+      00006F 81               [ 4]  154 	ret
+                                    155 ;	user/bh1750.c: 36: unsigned int BH1750_read_word(void)
+                                    156 ;	-----------------------------------------
+                                    157 ;	 function BH1750_read_word
+                                    158 ;	-----------------------------------------
+      000070                        159 _BH1750_read_word:
+      000070 52 0C            [ 2]  160 	sub	sp, #12
+                                    161 ;	user/bh1750.c: 39: unsigned char num_of_bytes = 0x02;   
+      000072 A6 02            [ 1]  162 	ld	a, #0x02
+      000074 6B 03            [ 1]  163 	ld	(0x03, sp), a
+                                    164 ;	user/bh1750.c: 40: unsigned char bytes[2] = {0x00, 0x00};
+      000076 96               [ 1]  165 	ldw	x, sp
+      000077 5C               [ 2]  166 	incw	x
+      000078 1F 04            [ 2]  167 	ldw	(0x04, sp), x
+      00007A 1E 04            [ 2]  168 	ldw	x, (0x04, sp)
+      00007C 7F               [ 1]  169 	clr	(x)
+      00007D 1E 04            [ 2]  170 	ldw	x, (0x04, sp)
+      00007F 5C               [ 2]  171 	incw	x
+      000080 1F 06            [ 2]  172 	ldw	(0x06, sp), x
+      000082 1E 06            [ 2]  173 	ldw	x, (0x06, sp)
+      000084 7F               [ 1]  174 	clr	(x)
+                                    175 ;	user/bh1750.c: 42: while(I2C_GetFlagStatus(I2C_FLAG_BUSBUSY));
+      000085                        176 00101$:
+      000085 4B 02            [ 1]  177 	push	#0x02
+      000087 4B 03            [ 1]  178 	push	#0x03
+      000089 CDr00r00         [ 4]  179 	call	_I2C_GetFlagStatus
+      00008C 85               [ 2]  180 	popw	x
+      00008D 4D               [ 1]  181 	tnz	a
+      00008E 26 F5            [ 1]  182 	jrne	00101$
+                                    183 ;	user/bh1750.c: 44: I2C_GenerateSTART(ENABLE);
+      000090 4B 01            [ 1]  184 	push	#0x01
+      000092 CDr00r00         [ 4]  185 	call	_I2C_GenerateSTART
+      000095 84               [ 1]  186 	pop	a
+                                    187 ;	user/bh1750.c: 45: while(!I2C_CheckEvent(I2C_EVENT_MASTER_MODE_SELECT));
+      000096                        188 00104$:
+      000096 4B 01            [ 1]  189 	push	#0x01
+      000098 4B 03            [ 1]  190 	push	#0x03
+      00009A CDr00r00         [ 4]  191 	call	_I2C_CheckEvent
+      00009D 85               [ 2]  192 	popw	x
+      00009E 4D               [ 1]  193 	tnz	a
+      00009F 27 F5            [ 1]  194 	jreq	00104$
+                                    195 ;	user/bh1750.c: 47: I2C_Send7bitAddress(BH1750_addr, I2C_DIRECTION_RX);
+      0000A1 4B 01            [ 1]  196 	push	#0x01
+      0000A3 4B 46            [ 1]  197 	push	#0x46
+      0000A5 CDr00r00         [ 4]  198 	call	_I2C_Send7bitAddress
+      0000A8 85               [ 2]  199 	popw	x
+                                    200 ;	user/bh1750.c: 48: while(!I2C_CheckEvent(I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
+      0000A9                        201 00107$:
+      0000A9 4B 02            [ 1]  202 	push	#0x02
+      0000AB 4B 03            [ 1]  203 	push	#0x03
+      0000AD CDr00r00         [ 4]  204 	call	_I2C_CheckEvent
+      0000B0 85               [ 2]  205 	popw	x
+      0000B1 4D               [ 1]  206 	tnz	a
+      0000B2 27 F5            [ 1]  207 	jreq	00107$
+                                    208 ;	user/bh1750.c: 50: while(num_of_bytes)
+      0000B4                        209 00114$:
+      0000B4 0D 03            [ 1]  210 	tnz	(0x03, sp)
+      0000B6 27 33            [ 1]  211 	jreq	00116$
+                                    212 ;	user/bh1750.c: 52: if(I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_RECEIVED))
+      0000B8 4B 40            [ 1]  213 	push	#0x40
+      0000BA 4B 03            [ 1]  214 	push	#0x03
+      0000BC CDr00r00         [ 4]  215 	call	_I2C_CheckEvent
+      0000BF 85               [ 2]  216 	popw	x
+      0000C0 4D               [ 1]  217 	tnz	a
+      0000C1 27 F1            [ 1]  218 	jreq	00114$
+                                    219 ;	user/bh1750.c: 54: if(num_of_bytes == 0)
+      0000C3 0D 03            [ 1]  220 	tnz	(0x03, sp)
+      0000C5 26 0C            [ 1]  221 	jrne	00111$
+                                    222 ;	user/bh1750.c: 56: I2C_AcknowledgeConfig(I2C_ACK_NONE);
+      0000C7 4B 00            [ 1]  223 	push	#0x00
+      0000C9 CDr00r00         [ 4]  224 	call	_I2C_AcknowledgeConfig
+      0000CC 84               [ 1]  225 	pop	a
+                                    226 ;	user/bh1750.c: 57: I2C_GenerateSTOP(ENABLE);   
+      0000CD 4B 01            [ 1]  227 	push	#0x01
+      0000CF CDr00r00         [ 4]  228 	call	_I2C_GenerateSTOP
+      0000D2 84               [ 1]  229 	pop	a
+      0000D3                        230 00111$:
+                                    231 ;	user/bh1750.c: 60: bytes[(num_of_bytes - 1)] = I2C_ReceiveData();
+      0000D3 7B 03            [ 1]  232 	ld	a, (0x03, sp)
+      0000D5 4A               [ 1]  233 	dec	a
+      0000D6 6B 08            [ 1]  234 	ld	(0x08, sp), a
+      0000D8 5F               [ 1]  235 	clrw	x
+      0000D9 7B 08            [ 1]  236 	ld	a, (0x08, sp)
+      0000DB 97               [ 1]  237 	ld	xl, a
+      0000DC 72 FB 04         [ 2]  238 	addw	x, (0x04, sp)
+      0000DF 89               [ 2]  239 	pushw	x
+      0000E0 CDr00r00         [ 4]  240 	call	_I2C_ReceiveData
+      0000E3 85               [ 2]  241 	popw	x
+      0000E4 F7               [ 1]  242 	ld	(x), a
+                                    243 ;	user/bh1750.c: 61: num_of_bytes--;
+      0000E5 7B 08            [ 1]  244 	ld	a, (0x08, sp)
+      0000E7 6B 03            [ 1]  245 	ld	(0x03, sp), a
+      0000E9 20 C9            [ 2]  246 	jra	00114$
+      0000EB                        247 00116$:
+                                    248 ;	user/bh1750.c: 65: value = ((bytes[1] << 8) | bytes[0]);  
+      0000EB 1E 06            [ 2]  249 	ldw	x, (0x06, sp)
+      0000ED F6               [ 1]  250 	ld	a, (x)
+      0000EE 95               [ 1]  251 	ld	xh, a
+      0000EF 4F               [ 1]  252 	clr	a
+      0000F0 0F 0A            [ 1]  253 	clr	(0x0a, sp)
+      0000F2 16 04            [ 2]  254 	ldw	y, (0x04, sp)
+      0000F4 90 F6            [ 1]  255 	ld	a, (y)
+      0000F6 0F 0B            [ 1]  256 	clr	(0x0b, sp)
+      0000F8 1A 0A            [ 1]  257 	or	a, (0x0a, sp)
+      0000FA 97               [ 1]  258 	ld	xl, a
+      0000FB 9E               [ 1]  259 	ld	a, xh
+      0000FC 1A 0B            [ 1]  260 	or	a, (0x0b, sp)
+      0000FE 90 5F            [ 1]  261 	clrw	y
+      000100 4D               [ 1]  262 	tnz	a
+      000101 2A 02            [ 1]  263 	jrpl	00161$
+      000103 90 5A            [ 2]  264 	decw	y
+      000105                        265 00161$:
+      000105 95               [ 1]  266 	ld	xh, a
+                                    267 ;	user/bh1750.c: 67: return value;
+      000106 5B 0C            [ 2]  268 	addw	sp, #12
+      000108 81               [ 4]  269 	ret
+                                    270 ;	user/bh1750.c: 71: unsigned int get_lux_value(unsigned char mode, unsigned int delay_time)
+                                    271 ;	-----------------------------------------
+                                    272 ;	 function get_lux_value
+                                    273 ;	-----------------------------------------
+      000109                        274 _get_lux_value:
+      000109 52 09            [ 2]  275 	sub	sp, #9
+                                    276 ;	user/bh1750.c: 73: unsigned long lux_value = 0x00;  
+      00010B 5F               [ 1]  277 	clrw	x
+      00010C 1F 04            [ 2]  278 	ldw	(0x04, sp), x
+      00010E 1F 02            [ 2]  279 	ldw	(0x02, sp), x
+                                    280 ;	user/bh1750.c: 77: while(s)
+      000110 A6 08            [ 1]  281 	ld	a, #0x08
+      000112 6B 01            [ 1]  282 	ld	(0x01, sp), a
+      000114                        283 00102$:
+      000114 0D 01            [ 1]  284 	tnz	(0x01, sp)
+      000116 27 42            [ 1]  285 	jreq	00104$
+                                    286 ;	user/bh1750.c: 79: BH1750_write(power_up);
+      000118 4B 01            [ 1]  287 	push	#0x01
+      00011A CDr00r33         [ 4]  288 	call	_BH1750_write
+      00011D 84               [ 1]  289 	pop	a
+                                    290 ;	user/bh1750.c: 80: BH1750_write(mode);
+      00011E 7B 0C            [ 1]  291 	ld	a, (0x0c, sp)
+      000120 88               [ 1]  292 	push	a
+      000121 CDr00r33         [ 4]  293 	call	_BH1750_write
+      000124 84               [ 1]  294 	pop	a
+                                    295 ;	user/bh1750.c: 81: lux_value += BH1750_read_word();
+      000125 CDr00r70         [ 4]  296 	call	_BH1750_read_word
+      000128 4F               [ 1]  297 	clr	a
+      000129 0F 06            [ 1]  298 	clr	(0x06, sp)
+      00012B 72 FB 04         [ 2]  299 	addw	x, (0x04, sp)
+      00012E 19 03            [ 1]  300 	adc	a, (0x03, sp)
+      000130 90 97            [ 1]  301 	ld	yl, a
+      000132 7B 06            [ 1]  302 	ld	a, (0x06, sp)
+      000134 19 02            [ 1]  303 	adc	a, (0x02, sp)
+      000136 90 95            [ 1]  304 	ld	yh, a
+      000138 1F 04            [ 2]  305 	ldw	(0x04, sp), x
+      00013A 17 02            [ 2]  306 	ldw	(0x02, sp), y
+                                    307 ;	user/bh1750.c: 82: for(dly = 0; dly < delay_time; dly += 1)
+      00013C 4F               [ 1]  308 	clr	a
+      00013D                        309 00106$:
+      00013D 5F               [ 1]  310 	clrw	x
+      00013E 97               [ 1]  311 	ld	xl, a
+      00013F 13 0D            [ 2]  312 	cpw	x, (0x0d, sp)
+      000141 24 0D            [ 1]  313 	jrnc	00101$
+                                    314 ;	user/bh1750.c: 84: delay_ms(1);
+      000143 88               [ 1]  315 	push	a
+      000144 4B 01            [ 1]  316 	push	#0x01
+      000146 4B 00            [ 1]  317 	push	#0x00
+      000148 CDr00r0C         [ 4]  318 	call	_delay_ms
+      00014B 85               [ 2]  319 	popw	x
+      00014C 84               [ 1]  320 	pop	a
+                                    321 ;	user/bh1750.c: 82: for(dly = 0; dly < delay_time; dly += 1)
+      00014D 4C               [ 1]  322 	inc	a
+      00014E 20 ED            [ 2]  323 	jra	00106$
+      000150                        324 00101$:
+                                    325 ;	user/bh1750.c: 86: BH1750_write(power_down);
+      000150 4B 00            [ 1]  326 	push	#0x00
+      000152 CDr00r33         [ 4]  327 	call	_BH1750_write
+      000155 84               [ 1]  328 	pop	a
+                                    329 ;	user/bh1750.c: 87: s--;
+      000156 0A 01            [ 1]  330 	dec	(0x01, sp)
+      000158 20 BA            [ 2]  331 	jra	00102$
+      00015A                        332 00104$:
+                                    333 ;	user/bh1750.c: 89: lux_value >>= 3;
+      00015A 1E 04            [ 2]  334 	ldw	x, (0x04, sp)
+      00015C 16 02            [ 2]  335 	ldw	y, (0x02, sp)
+      00015E 90 54            [ 2]  336 	srlw	y
+      000160 56               [ 2]  337 	rrcw	x
+      000161 90 54            [ 2]  338 	srlw	y
+      000163 56               [ 2]  339 	rrcw	x
+      000164 90 54            [ 2]  340 	srlw	y
+      000166 56               [ 2]  341 	rrcw	x
+                                    342 ;	user/bh1750.c: 91: return ((unsigned int)lux_value);
+      000167 5B 09            [ 2]  343 	addw	sp, #9
+      000169 81               [ 4]  344 	ret
+                                    345 	.area CODE
+                                    346 	.area INITIALIZER
+                                    347 	.area CABS (ABS)

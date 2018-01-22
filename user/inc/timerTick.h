@@ -4,7 +4,7 @@
 #include "stm8s.h"
 #include "stm8s_conf.h"
 
-#define CYCLE_US   200
+#define CYCLE_US   1000
 #define CYCLE_MS   0xFFFFFFFF
 
 typedef struct

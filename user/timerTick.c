@@ -31,10 +31,11 @@ void TIMER_Init(void)
 void TIMER_Inc(void)
 {
   timeTickUs++;
+
   if(timeTickUs%5 == 0){
     timeTickMs++;
   }
-}
+} 
 
 void TIMER_InitTime(TIME *pTime)
 {
