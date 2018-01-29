@@ -56,8 +56,8 @@
                                      56 ; Stack segment in internal ram 
                                      57 ;--------------------------------------------------------
                                      58 	.area	SSEG
-      008A2C                         59 __start__stack:
-      008A2C                         60 	.ds	1
+      009212                         59 __start__stack:
+      009212                         60 	.ds	1
                                      61 
                                      62 ;--------------------------------------------------------
                                      63 ; absolute external ram data
@@ -120,7 +120,7 @@
       00808F AE 00 01         [ 2]  120 	ldw	x, #l_INITIALIZER
       008092 27 09            [ 1]  121 	jreq	00004$
       008094                        122 00003$:
-      008094 D6 8A 2A         [ 1]  123 	ld	a, (s_INITIALIZER - 1, x)
+      008094 D6 92 10         [ 1]  123 	ld	a, (s_INITIALIZER - 1, x)
       008097 D7 00 0F         [ 1]  124 	ld	(s_INITIALIZED - 1, x), a
       00809A 5A               [ 2]  125 	decw	x
       00809B 26 F7            [ 1]  126 	jrne	00003$
@@ -146,85 +146,85 @@
                                     146 ;	-----------------------------------------
       00820A                        147 _clock_setup:
                                     148 ;	user/main.c: 29: CLK_DeInit();
-      00820A CD 85 11         [ 4]  149 	call	_CLK_DeInit
+      00820A CD 85 14         [ 4]  149 	call	_CLK_DeInit
                                     150 ;	user/main.c: 30: CLK_HSECmd(DISABLE);
       00820D 4B 00            [ 1]  151 	push	#0x00
-      00820F CD 85 5D         [ 4]  152 	call	_CLK_HSECmd
+      00820F CD 85 60         [ 4]  152 	call	_CLK_HSECmd
       008212 84               [ 1]  153 	pop	a
                                     154 ;	user/main.c: 31: CLK_LSICmd(DISABLE);
       008213 4B 00            [ 1]  155 	push	#0x00
-      008215 CD 85 79         [ 4]  156 	call	_CLK_LSICmd
+      008215 CD 85 7C         [ 4]  156 	call	_CLK_LSICmd
       008218 84               [ 1]  157 	pop	a
                                     158 ;	user/main.c: 32: CLK_HSICmd(ENABLE);
       008219 4B 01            [ 1]  159 	push	#0x01
-      00821B CD 85 6B         [ 4]  160 	call	_CLK_HSICmd
+      00821B CD 85 6E         [ 4]  160 	call	_CLK_HSICmd
       00821E 84               [ 1]  161 	pop	a
                                     162 ;	user/main.c: 33: while(CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == FALSE);
       00821F                        163 00101$:
       00821F 4B 02            [ 1]  164 	push	#0x02
       008221 4B 01            [ 1]  165 	push	#0x01
-      008223 CD 88 0F         [ 4]  166 	call	_CLK_GetFlagStatus
+      008223 CD 88 12         [ 4]  166 	call	_CLK_GetFlagStatus
       008226 85               [ 2]  167 	popw	x
       008227 4D               [ 1]  168 	tnz	a
       008228 27 F5            [ 1]  169 	jreq	00101$
                                     170 ;	user/main.c: 34: CLK_ClockSwitchCmd(ENABLE);
       00822A 4B 01            [ 1]  171 	push	#0x01
-      00822C CD 85 9B         [ 4]  172 	call	_CLK_ClockSwitchCmd
+      00822C CD 85 9E         [ 4]  172 	call	_CLK_ClockSwitchCmd
       00822F 84               [ 1]  173 	pop	a
                                     174 ;	user/main.c: 36: CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
       008230 4B 00            [ 1]  175 	push	#0x00
-      008232 CD 86 DE         [ 4]  176 	call	_CLK_HSIPrescalerConfig
+      008232 CD 86 E1         [ 4]  176 	call	_CLK_HSIPrescalerConfig
       008235 84               [ 1]  177 	pop	a
                                     178 ;	user/main.c: 39: CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1 );
       008236 4B 80            [ 1]  179 	push	#0x80
-      008238 CD 87 55         [ 4]  180 	call	_CLK_SYSCLKConfig
+      008238 CD 87 58         [ 4]  180 	call	_CLK_SYSCLKConfig
       00823B 84               [ 1]  181 	pop	a
                                     182 ;	user/main.c: 40: CLK_ClockSwitchConfig(CLK_SWITCHMODE_AUTO, CLK_SOURCE_HSI, DISABLE, CLK_CURRENTCLOCKSTATE_ENABLE);
       00823C 4B 01            [ 1]  183 	push	#0x01
       00823E 4B 00            [ 1]  184 	push	#0x00
       008240 4B E1            [ 1]  185 	push	#0xe1
       008242 4B 01            [ 1]  186 	push	#0x01
-      008244 CD 86 19         [ 4]  187 	call	_CLK_ClockSwitchConfig
+      008244 CD 86 1C         [ 4]  187 	call	_CLK_ClockSwitchConfig
       008247 5B 04            [ 2]  188 	addw	sp, #4
                                     189 ;	user/main.c: 42: CLK_PeripheralClockConfig(CLK_PERIPHERAL_SPI, DISABLE);
       008249 4B 00            [ 1]  190 	push	#0x00
       00824B 4B 01            [ 1]  191 	push	#0x01
-      00824D CD 85 C3         [ 4]  192 	call	_CLK_PeripheralClockConfig
+      00824D CD 85 C6         [ 4]  192 	call	_CLK_PeripheralClockConfig
       008250 85               [ 2]  193 	popw	x
                                     194 ;	user/main.c: 43: CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, ENABLE);
       008251 4B 01            [ 1]  195 	push	#0x01
       008253 4B 00            [ 1]  196 	push	#0x00
-      008255 CD 85 C3         [ 4]  197 	call	_CLK_PeripheralClockConfig
+      008255 CD 85 C6         [ 4]  197 	call	_CLK_PeripheralClockConfig
       008258 85               [ 2]  198 	popw	x
                                     199 ;	user/main.c: 44: CLK_PeripheralClockConfig(CLK_PERIPHERAL_ADC, DISABLE);
       008259 4B 00            [ 1]  200 	push	#0x00
       00825B 4B 13            [ 1]  201 	push	#0x13
-      00825D CD 85 C3         [ 4]  202 	call	_CLK_PeripheralClockConfig
+      00825D CD 85 C6         [ 4]  202 	call	_CLK_PeripheralClockConfig
       008260 85               [ 2]  203 	popw	x
                                     204 ;	user/main.c: 45: CLK_PeripheralClockConfig(CLK_PERIPHERAL_AWU, DISABLE);
       008261 4B 00            [ 1]  205 	push	#0x00
       008263 4B 12            [ 1]  206 	push	#0x12
-      008265 CD 85 C3         [ 4]  207 	call	_CLK_PeripheralClockConfig
+      008265 CD 85 C6         [ 4]  207 	call	_CLK_PeripheralClockConfig
       008268 85               [ 2]  208 	popw	x
-                                    209 ;	user/main.c: 46: CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, DISABLE);
-      008269 4B 00            [ 1]  210 	push	#0x00
+                                    209 ;	user/main.c: 46: CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, ENABLE);
+      008269 4B 01            [ 1]  210 	push	#0x01
       00826B 4B 03            [ 1]  211 	push	#0x03
-      00826D CD 85 C3         [ 4]  212 	call	_CLK_PeripheralClockConfig
+      00826D CD 85 C6         [ 4]  212 	call	_CLK_PeripheralClockConfig
       008270 85               [ 2]  213 	popw	x
                                     214 ;	user/main.c: 47: CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER1, DISABLE);
       008271 4B 00            [ 1]  215 	push	#0x00
       008273 4B 07            [ 1]  216 	push	#0x07
-      008275 CD 85 C3         [ 4]  217 	call	_CLK_PeripheralClockConfig
+      008275 CD 85 C6         [ 4]  217 	call	_CLK_PeripheralClockConfig
       008278 85               [ 2]  218 	popw	x
                                     219 ;	user/main.c: 48: CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, DISABLE);
       008279 4B 00            [ 1]  220 	push	#0x00
       00827B 4B 05            [ 1]  221 	push	#0x05
-      00827D CD 85 C3         [ 4]  222 	call	_CLK_PeripheralClockConfig
+      00827D CD 85 C6         [ 4]  222 	call	_CLK_PeripheralClockConfig
       008280 85               [ 2]  223 	popw	x
                                     224 ;	user/main.c: 49: CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER4, ENABLE);
       008281 4B 01            [ 1]  225 	push	#0x01
       008283 4B 04            [ 1]  226 	push	#0x04
-      008285 CD 85 C3         [ 4]  227 	call	_CLK_PeripheralClockConfig
+      008285 CD 85 C6         [ 4]  227 	call	_CLK_PeripheralClockConfig
       008288 85               [ 2]  228 	popw	x
       008289 81               [ 4]  229 	ret
                                     230 ;	user/main.c: 52: INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
@@ -235,10 +235,10 @@
       00828A 62               [ 2]  235 	div	x, a
                                     236 ;	user/main.c: 54: TIM4_ClearITPendingBit(TIM4_IT_UPDATE);
       00828B 4B 01            [ 1]  237 	push	#0x01
-      00828D CD 89 C9         [ 4]  238 	call	_TIM4_ClearITPendingBit
+      00828D CD 91 1F         [ 4]  238 	call	_TIM4_ClearITPendingBit
       008290 84               [ 1]  239 	pop	a
                                     240 ;	user/main.c: 55: TIMER_Inc();
-      008291 CD 83 99         [ 4]  241 	call	_TIMER_Inc
+      008291 CD 83 9C         [ 4]  241 	call	_TIMER_Inc
       008294 80               [11]  242 	iret
                                     243 ;	user/main.c: 59: void I2C_setup(void)
                                     244 ;	-----------------------------------------
@@ -246,16 +246,16 @@
                                     246 ;	-----------------------------------------
       008295                        247 _I2C_setup:
                                     248 ;	user/main.c: 61: I2C_DeInit();
-      008295 CD 00 00         [ 4]  249 	call	_I2C_DeInit
+      008295 CD 89 7B         [ 4]  249 	call	_I2C_DeInit
                                     250 ;	user/main.c: 67: (CLK_GetClockFreq() / 1000000));
-      008298 CD 87 A4         [ 4]  251 	call	_CLK_GetClockFreq
+      008298 CD 87 A7         [ 4]  251 	call	_CLK_GetClockFreq
       00829B 4B 40            [ 1]  252 	push	#0x40
       00829D 4B 42            [ 1]  253 	push	#0x42
       00829F 4B 0F            [ 1]  254 	push	#0x0f
       0082A1 4B 00            [ 1]  255 	push	#0x00
       0082A3 89               [ 2]  256 	pushw	x
       0082A4 90 89            [ 2]  257 	pushw	y
-      0082A6 CD 89 D1         [ 4]  258 	call	__divulong
+      0082A6 CD 91 27         [ 4]  258 	call	__divulong
       0082A9 5B 08            [ 2]  259 	addw	sp, #8
       0082AB 9F               [ 1]  260 	ld	a, xl
                                     261 ;	user/main.c: 62: I2C_Init(100000, 
@@ -269,11 +269,11 @@
       0082B9 4B 86            [ 1]  269 	push	#0x86
       0082BB 4B 01            [ 1]  270 	push	#0x01
       0082BD 4B 00            [ 1]  271 	push	#0x00
-      0082BF CD 00 00         [ 4]  272 	call	_I2C_Init
+      0082BF CD 89 A0         [ 4]  272 	call	_I2C_Init
       0082C2 5B 0A            [ 2]  273 	addw	sp, #10
                                     274 ;	user/main.c: 68: I2C_Cmd(ENABLE);
       0082C4 4B 01            [ 1]  275 	push	#0x01
-      0082C6 CD 00 00         [ 4]  276 	call	_I2C_Cmd
+      0082C6 CD 8B 8B         [ 4]  276 	call	_I2C_Cmd
       0082C9 84               [ 1]  277 	pop	a
       0082CA 81               [ 4]  278 	ret
                                     279 ;	user/main.c: 71: void GPIO_setup(void)
@@ -286,21 +286,21 @@
       0082CD 4B 10            [ 1]  286 	push	#0x10
       0082CF 4B 05            [ 1]  287 	push	#0x05
       0082D1 4B 50            [ 1]  288 	push	#0x50
-      0082D3 CD 88 9D         [ 4]  289 	call	_GPIO_Init
+      0082D3 CD 88 A0         [ 4]  289 	call	_GPIO_Init
       0082D6 5B 04            [ 2]  290 	addw	sp, #4
                                     291 ;	user/main.c: 74: GPIO_Init(GPIOB, GPIO_PIN_5, GPIO_MODE_OUT_OD_HIZ_FAST);
       0082D8 4B B0            [ 1]  292 	push	#0xb0
       0082DA 4B 20            [ 1]  293 	push	#0x20
       0082DC 4B 05            [ 1]  294 	push	#0x05
       0082DE 4B 50            [ 1]  295 	push	#0x50
-      0082E0 CD 88 9D         [ 4]  296 	call	_GPIO_Init
+      0082E0 CD 88 A0         [ 4]  296 	call	_GPIO_Init
       0082E3 5B 04            [ 2]  297 	addw	sp, #4
                                     298 ;	user/main.c: 75: GPIO_Init(GPIOA,GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_SLOW);
       0082E5 4B C0            [ 1]  299 	push	#0xc0
       0082E7 4B 02            [ 1]  300 	push	#0x02
       0082E9 4B 00            [ 1]  301 	push	#0x00
       0082EB 4B 50            [ 1]  302 	push	#0x50
-      0082ED CD 88 9D         [ 4]  303 	call	_GPIO_Init
+      0082ED CD 88 A0         [ 4]  303 	call	_GPIO_Init
       0082F0 5B 04            [ 2]  304 	addw	sp, #4
       0082F2 81               [ 4]  305 	ret
                                     306 ;	user/main.c: 95: void Led_manager (void)
@@ -315,7 +315,7 @@
       0082FA 4B 00            [ 1]  315 	push	#0x00
       0082FC 4B 00            [ 1]  316 	push	#0x00
       0082FE 89               [ 2]  317 	pushw	x
-      0082FF CD 84 1C         [ 4]  318 	call	_TIMER_CheckTimeMS
+      0082FF CD 84 1F         [ 4]  318 	call	_TIMER_CheckTimeMS
       008302 5B 06            [ 2]  319 	addw	sp, #6
       008304 4D               [ 1]  320 	tnz	a
       008305 26 07            [ 1]  321 	jrne	00102$
@@ -331,7 +331,7 @@
       008315 4B 02            [ 1]  331 	push	#0x02
       008317 4B 00            [ 1]  332 	push	#0x00
       008319 4B 50            [ 1]  333 	push	#0x50
-      00831B CD 89 31         [ 4]  334 	call	_GPIO_WriteHigh
+      00831B CD 89 34         [ 4]  334 	call	_GPIO_WriteHigh
       00831E 5B 03            [ 2]  335 	addw	sp, #3
       008320 81               [ 4]  336 	ret
       008321                        337 00104$:
@@ -339,7 +339,7 @@
       008321 4B 02            [ 1]  339 	push	#0x02
       008323 4B 00            [ 1]  340 	push	#0x00
       008325 4B 50            [ 1]  341 	push	#0x50
-      008327 CD 89 38         [ 4]  342 	call	_GPIO_WriteLow
+      008327 CD 89 3B         [ 4]  342 	call	_GPIO_WriteLow
       00832A 5B 03            [ 2]  343 	addw	sp, #3
       00832C 81               [ 4]  344 	ret
                                     345 ;	user/main.c: 105: void main() 
@@ -351,35 +351,37 @@
       00832D CD 82 0A         [ 4]  351 	call	_clock_setup
                                     352 ;	user/main.c: 110: GPIO_setup();
       008330 CD 82 CB         [ 4]  353 	call	_GPIO_setup
-                                    354 ;	user/main.c: 113: TIMER_Init();
-      008333 CD 83 66         [ 4]  355 	call	_TIMER_Init
-                                    356 ;	user/main.c: 114: SetupSerialPort();
-      008336 CD 84 92         [ 4]  357 	call	_SetupSerialPort
-                                    358 ;	user/main.c: 116: enableInterrupts();
-      008339 9A               [ 1]  359 	rim
-                                    360 ;	user/main.c: 117: TIMER_InitTime(&tick);
-      00833A AE 00 01         [ 2]  361 	ldw	x, #_tick+0
-      00833D 89               [ 2]  362 	pushw	x
-      00833E CD 83 C5         [ 4]  363 	call	_TIMER_InitTime
-      008341 85               [ 2]  364 	popw	x
-                                    365 ;	user/main.c: 118: while(1)
-      008342                        366 00102$:
-                                    367 ;	user/main.c: 120: Led_manager ();
-      008342 CD 82 F3         [ 4]  368 	call	_Led_manager
-                                    369 ;	user/main.c: 121: Printf("Hello from my program");
-      008345 AE 83 50         [ 2]  370 	ldw	x, #___str_0+0
-      008348 89               [ 2]  371 	pushw	x
-      008349 CD 84 F9         [ 4]  372 	call	_Printf
-      00834C 85               [ 2]  373 	popw	x
-      00834D 20 F3            [ 2]  374 	jra	00102$
-      00834F 81               [ 4]  375 	ret
-                                    376 	.area CODE
-      008350                        377 ___str_0:
-      008350 48 65 6C 6C 6F 20 66   378 	.ascii "Hello from my program"
+                                    354 ;	user/main.c: 111: I2C_setup();
+      008333 CD 82 95         [ 4]  355 	call	_I2C_setup
+                                    356 ;	user/main.c: 113: TIMER_Init();
+      008336 CD 83 69         [ 4]  357 	call	_TIMER_Init
+                                    358 ;	user/main.c: 114: SetupSerialPort();
+      008339 CD 84 95         [ 4]  359 	call	_SetupSerialPort
+                                    360 ;	user/main.c: 116: enableInterrupts();
+      00833C 9A               [ 1]  361 	rim
+                                    362 ;	user/main.c: 117: TIMER_InitTime(&tick);
+      00833D AE 00 01         [ 2]  363 	ldw	x, #_tick+0
+      008340 89               [ 2]  364 	pushw	x
+      008341 CD 83 C8         [ 4]  365 	call	_TIMER_InitTime
+      008344 85               [ 2]  366 	popw	x
+                                    367 ;	user/main.c: 118: while(1)
+      008345                        368 00102$:
+                                    369 ;	user/main.c: 120: Led_manager ();
+      008345 CD 82 F3         [ 4]  370 	call	_Led_manager
+                                    371 ;	user/main.c: 121: Printf("Hello from my program");
+      008348 AE 83 53         [ 2]  372 	ldw	x, #___str_0+0
+      00834B 89               [ 2]  373 	pushw	x
+      00834C CD 84 FC         [ 4]  374 	call	_Printf
+      00834F 85               [ 2]  375 	popw	x
+      008350 20 F3            [ 2]  376 	jra	00102$
+      008352 81               [ 4]  377 	ret
+                                    378 	.area CODE
+      008353                        379 ___str_0:
+      008353 48 65 6C 6C 6F 20 66   380 	.ascii "Hello from my program"
              72 6F 6D 20 6D 79 20
              70 72 6F 67 72 61 6D
-      008365 00                     379 	.db 0x00
-                                    380 	.area INITIALIZER
-      008A2B                        381 __xinit__ToggleVar:
-      008A2B 01                     382 	.db #0x01	; 1
-                                    383 	.area CABS (ABS)
+      008368 00                     381 	.db 0x00
+                                    382 	.area INITIALIZER
+      009211                        383 __xinit__ToggleVar:
+      009211 01                     384 	.db #0x01	; 1
+                                    385 	.area CABS (ABS)

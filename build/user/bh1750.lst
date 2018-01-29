@@ -164,13 +164,13 @@
                                     164 ;	user/bh1750.c: 40: unsigned char bytes[2] = {0x00, 0x00};
       000076 96               [ 1]  165 	ldw	x, sp
       000077 5C               [ 2]  166 	incw	x
-      000078 1F 04            [ 2]  167 	ldw	(0x04, sp), x
-      00007A 1E 04            [ 2]  168 	ldw	x, (0x04, sp)
+      000078 1F 0B            [ 2]  167 	ldw	(0x0b, sp), x
+      00007A 1E 0B            [ 2]  168 	ldw	x, (0x0b, sp)
       00007C 7F               [ 1]  169 	clr	(x)
-      00007D 1E 04            [ 2]  170 	ldw	x, (0x04, sp)
+      00007D 1E 0B            [ 2]  170 	ldw	x, (0x0b, sp)
       00007F 5C               [ 2]  171 	incw	x
-      000080 1F 06            [ 2]  172 	ldw	(0x06, sp), x
-      000082 1E 06            [ 2]  173 	ldw	x, (0x06, sp)
+      000080 1F 09            [ 2]  172 	ldw	(0x09, sp), x
+      000082 1E 09            [ 2]  173 	ldw	x, (0x09, sp)
       000084 7F               [ 1]  174 	clr	(x)
                                     175 ;	user/bh1750.c: 42: while(I2C_GetFlagStatus(I2C_FLAG_BUSBUSY));
       000085                        176 00101$:
@@ -235,7 +235,7 @@
       0000D8 5F               [ 1]  235 	clrw	x
       0000D9 7B 08            [ 1]  236 	ld	a, (0x08, sp)
       0000DB 97               [ 1]  237 	ld	xl, a
-      0000DC 72 FB 04         [ 2]  238 	addw	x, (0x04, sp)
+      0000DC 72 FB 0B         [ 2]  238 	addw	x, (0x0b, sp)
       0000DF 89               [ 2]  239 	pushw	x
       0000E0 CDr00r00         [ 4]  240 	call	_I2C_ReceiveData
       0000E3 85               [ 2]  241 	popw	x
@@ -246,18 +246,18 @@
       0000E9 20 C9            [ 2]  246 	jra	00114$
       0000EB                        247 00116$:
                                     248 ;	user/bh1750.c: 65: value = ((bytes[1] << 8) | bytes[0]);  
-      0000EB 1E 06            [ 2]  249 	ldw	x, (0x06, sp)
+      0000EB 1E 09            [ 2]  249 	ldw	x, (0x09, sp)
       0000ED F6               [ 1]  250 	ld	a, (x)
       0000EE 95               [ 1]  251 	ld	xh, a
       0000EF 4F               [ 1]  252 	clr	a
-      0000F0 0F 0A            [ 1]  253 	clr	(0x0a, sp)
-      0000F2 16 04            [ 2]  254 	ldw	y, (0x04, sp)
+      0000F0 0F 07            [ 1]  253 	clr	(0x07, sp)
+      0000F2 16 0B            [ 2]  254 	ldw	y, (0x0b, sp)
       0000F4 90 F6            [ 1]  255 	ld	a, (y)
-      0000F6 0F 0B            [ 1]  256 	clr	(0x0b, sp)
-      0000F8 1A 0A            [ 1]  257 	or	a, (0x0a, sp)
+      0000F6 0F 04            [ 1]  256 	clr	(0x04, sp)
+      0000F8 1A 07            [ 1]  257 	or	a, (0x07, sp)
       0000FA 97               [ 1]  258 	ld	xl, a
       0000FB 9E               [ 1]  259 	ld	a, xh
-      0000FC 1A 0B            [ 1]  260 	or	a, (0x0b, sp)
+      0000FC 1A 04            [ 1]  260 	or	a, (0x04, sp)
       0000FE 90 5F            [ 1]  261 	clrw	y
       000100 4D               [ 1]  262 	tnz	a
       000101 2A 02            [ 1]  263 	jrpl	00161$

@@ -1,0 +1,1309 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 3.6.0 #9615 (Mac OS X x86_64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module stm8s_i2c
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _assert_failed
+                                     12 	.globl _I2C_DeInit
+                                     13 	.globl _I2C_Init
+                                     14 	.globl _I2C_Cmd
+                                     15 	.globl _I2C_GeneralCallCmd
+                                     16 	.globl _I2C_GenerateSTART
+                                     17 	.globl _I2C_GenerateSTOP
+                                     18 	.globl _I2C_SoftwareResetCmd
+                                     19 	.globl _I2C_StretchClockCmd
+                                     20 	.globl _I2C_AcknowledgeConfig
+                                     21 	.globl _I2C_ITConfig
+                                     22 	.globl _I2C_FastModeDutyCycleConfig
+                                     23 	.globl _I2C_ReceiveData
+                                     24 	.globl _I2C_Send7bitAddress
+                                     25 	.globl _I2C_SendData
+                                     26 	.globl _I2C_CheckEvent
+                                     27 	.globl _I2C_GetLastEvent
+                                     28 	.globl _I2C_GetFlagStatus
+                                     29 	.globl _I2C_ClearFlag
+                                     30 	.globl _I2C_GetITStatus
+                                     31 	.globl _I2C_ClearITPendingBit
+                                     32 ;--------------------------------------------------------
+                                     33 ; ram data
+                                     34 ;--------------------------------------------------------
+                                     35 	.area DATA
+                                     36 ;--------------------------------------------------------
+                                     37 ; ram data
+                                     38 ;--------------------------------------------------------
+                                     39 	.area INITIALIZED
+                                     40 ;--------------------------------------------------------
+                                     41 ; absolute external ram data
+                                     42 ;--------------------------------------------------------
+                                     43 	.area DABS (ABS)
+                                     44 ;--------------------------------------------------------
+                                     45 ; global & static initialisations
+                                     46 ;--------------------------------------------------------
+                                     47 	.area HOME
+                                     48 	.area GSINIT
+                                     49 	.area GSFINAL
+                                     50 	.area GSINIT
+                                     51 ;--------------------------------------------------------
+                                     52 ; Home
+                                     53 ;--------------------------------------------------------
+                                     54 	.area HOME
+                                     55 	.area HOME
+                                     56 ;--------------------------------------------------------
+                                     57 ; code
+                                     58 ;--------------------------------------------------------
+                                     59 	.area CODE
+                                     60 ;	lib/stm8s_i2c.c: 67: void I2C_DeInit(void)
+                                     61 ;	-----------------------------------------
+                                     62 ;	 function I2C_DeInit
+                                     63 ;	-----------------------------------------
+      000000                         64 _I2C_DeInit:
+                                     65 ;	lib/stm8s_i2c.c: 69: I2C->CR1 = I2C_CR1_RESET_VALUE;
+      000000 35 00 52 10      [ 1]   66 	mov	0x5210+0, #0x00
+                                     67 ;	lib/stm8s_i2c.c: 70: I2C->CR2 = I2C_CR2_RESET_VALUE;
+      000004 35 00 52 11      [ 1]   68 	mov	0x5211+0, #0x00
+                                     69 ;	lib/stm8s_i2c.c: 71: I2C->FREQR = I2C_FREQR_RESET_VALUE;
+      000008 35 00 52 12      [ 1]   70 	mov	0x5212+0, #0x00
+                                     71 ;	lib/stm8s_i2c.c: 72: I2C->OARL = I2C_OARL_RESET_VALUE;
+      00000C 35 00 52 13      [ 1]   72 	mov	0x5213+0, #0x00
+                                     73 ;	lib/stm8s_i2c.c: 73: I2C->OARH = I2C_OARH_RESET_VALUE;
+      000010 35 00 52 14      [ 1]   74 	mov	0x5214+0, #0x00
+                                     75 ;	lib/stm8s_i2c.c: 74: I2C->ITR = I2C_ITR_RESET_VALUE;
+      000014 35 00 52 1A      [ 1]   76 	mov	0x521a+0, #0x00
+                                     77 ;	lib/stm8s_i2c.c: 75: I2C->CCRL = I2C_CCRL_RESET_VALUE;
+      000018 35 00 52 1B      [ 1]   78 	mov	0x521b+0, #0x00
+                                     79 ;	lib/stm8s_i2c.c: 76: I2C->CCRH = I2C_CCRH_RESET_VALUE;
+      00001C 35 00 52 1C      [ 1]   80 	mov	0x521c+0, #0x00
+                                     81 ;	lib/stm8s_i2c.c: 77: I2C->TRISER = I2C_TRISER_RESET_VALUE;
+      000020 35 02 52 1D      [ 1]   82 	mov	0x521d+0, #0x02
+      000024 81               [ 4]   83 	ret
+                                     84 ;	lib/stm8s_i2c.c: 96: void I2C_Init(uint32_t OutputClockFrequencyHz, uint16_t OwnAddress, 
+                                     85 ;	-----------------------------------------
+                                     86 ;	 function I2C_Init
+                                     87 ;	-----------------------------------------
+      000025                         88 _I2C_Init:
+      000025 52 0E            [ 2]   89 	sub	sp, #14
+                                     90 ;	lib/stm8s_i2c.c: 102: uint8_t tmpccrh = 0;
+      000027 0F 03            [ 1]   91 	clr	(0x03, sp)
+                                     92 ;	lib/stm8s_i2c.c: 105: assert_param(IS_I2C_ACK_OK(Ack));
+      000029 0D 18            [ 1]   93 	tnz	(0x18, sp)
+      00002B 27 1D            [ 1]   94 	jreq	00114$
+      00002D 7B 18            [ 1]   95 	ld	a, (0x18, sp)
+      00002F A1 01            [ 1]   96 	cp	a, #0x01
+      000031 27 17            [ 1]   97 	jreq	00114$
+      000033 7B 18            [ 1]   98 	ld	a, (0x18, sp)
+      000035 A1 02            [ 1]   99 	cp	a, #0x02
+      000037 27 11            [ 1]  100 	jreq	00114$
+      000039 AEr07r43         [ 2]  101 	ldw	x, #___str_0+0
+      00003C 4B 69            [ 1]  102 	push	#0x69
+      00003E 4B 00            [ 1]  103 	push	#0x00
+      000040 4B 00            [ 1]  104 	push	#0x00
+      000042 4B 00            [ 1]  105 	push	#0x00
+      000044 89               [ 2]  106 	pushw	x
+      000045 CDr00r00         [ 4]  107 	call	_assert_failed
+      000048 5B 06            [ 2]  108 	addw	sp, #6
+      00004A                        109 00114$:
+                                    110 ;	lib/stm8s_i2c.c: 106: assert_param(IS_I2C_ADDMODE_OK(AddMode));
+      00004A 0D 19            [ 1]  111 	tnz	(0x19, sp)
+      00004C 27 17            [ 1]  112 	jreq	00122$
+      00004E 7B 19            [ 1]  113 	ld	a, (0x19, sp)
+      000050 A1 80            [ 1]  114 	cp	a, #0x80
+      000052 27 11            [ 1]  115 	jreq	00122$
+      000054 AEr07r43         [ 2]  116 	ldw	x, #___str_0+0
+      000057 4B 6A            [ 1]  117 	push	#0x6a
+      000059 4B 00            [ 1]  118 	push	#0x00
+      00005B 4B 00            [ 1]  119 	push	#0x00
+      00005D 4B 00            [ 1]  120 	push	#0x00
+      00005F 89               [ 2]  121 	pushw	x
+      000060 CDr00r00         [ 4]  122 	call	_assert_failed
+      000063 5B 06            [ 2]  123 	addw	sp, #6
+      000065                        124 00122$:
+                                    125 ;	lib/stm8s_i2c.c: 107: assert_param(IS_I2C_OWN_ADDRESS_OK(OwnAddress));
+      000065 1E 15            [ 2]  126 	ldw	x, (0x15, sp)
+      000067 A3 03 FF         [ 2]  127 	cpw	x, #0x03ff
+      00006A 23 11            [ 2]  128 	jrule	00127$
+      00006C AEr07r43         [ 2]  129 	ldw	x, #___str_0+0
+      00006F 4B 6B            [ 1]  130 	push	#0x6b
+      000071 4B 00            [ 1]  131 	push	#0x00
+      000073 4B 00            [ 1]  132 	push	#0x00
+      000075 4B 00            [ 1]  133 	push	#0x00
+      000077 89               [ 2]  134 	pushw	x
+      000078 CDr00r00         [ 4]  135 	call	_assert_failed
+      00007B 5B 06            [ 2]  136 	addw	sp, #6
+      00007D                        137 00127$:
+                                    138 ;	lib/stm8s_i2c.c: 108: assert_param(IS_I2C_DUTYCYCLE_OK(I2C_DutyCycle));  
+      00007D 0D 17            [ 1]  139 	tnz	(0x17, sp)
+      00007F 27 17            [ 1]  140 	jreq	00129$
+      000081 7B 17            [ 1]  141 	ld	a, (0x17, sp)
+      000083 A1 40            [ 1]  142 	cp	a, #0x40
+      000085 27 11            [ 1]  143 	jreq	00129$
+      000087 AEr07r43         [ 2]  144 	ldw	x, #___str_0+0
+      00008A 4B 6C            [ 1]  145 	push	#0x6c
+      00008C 4B 00            [ 1]  146 	push	#0x00
+      00008E 4B 00            [ 1]  147 	push	#0x00
+      000090 4B 00            [ 1]  148 	push	#0x00
+      000092 89               [ 2]  149 	pushw	x
+      000093 CDr00r00         [ 4]  150 	call	_assert_failed
+      000096 5B 06            [ 2]  151 	addw	sp, #6
+      000098                        152 00129$:
+                                    153 ;	lib/stm8s_i2c.c: 109: assert_param(IS_I2C_INPUT_CLOCK_FREQ_OK(InputClockFrequencyMHz));
+      000098 7B 1A            [ 1]  154 	ld	a, (0x1a, sp)
+      00009A A1 01            [ 1]  155 	cp	a, #0x01
+      00009C 25 06            [ 1]  156 	jrc	00133$
+      00009E 7B 1A            [ 1]  157 	ld	a, (0x1a, sp)
+      0000A0 A1 10            [ 1]  158 	cp	a, #0x10
+      0000A2 23 11            [ 2]  159 	jrule	00134$
+      0000A4                        160 00133$:
+      0000A4 AEr07r43         [ 2]  161 	ldw	x, #___str_0+0
+      0000A7 4B 6D            [ 1]  162 	push	#0x6d
+      0000A9 4B 00            [ 1]  163 	push	#0x00
+      0000AB 4B 00            [ 1]  164 	push	#0x00
+      0000AD 4B 00            [ 1]  165 	push	#0x00
+      0000AF 89               [ 2]  166 	pushw	x
+      0000B0 CDr00r00         [ 4]  167 	call	_assert_failed
+      0000B3 5B 06            [ 2]  168 	addw	sp, #6
+      0000B5                        169 00134$:
+                                    170 ;	lib/stm8s_i2c.c: 110: assert_param(IS_I2C_OUTPUT_CLOCK_FREQ_OK(OutputClockFrequencyHz));
+      0000B5 1E 13            [ 2]  171 	ldw	x, (0x13, sp)
+      0000B7 A3 00 01         [ 2]  172 	cpw	x, #0x0001
+      0000BA 7B 12            [ 1]  173 	ld	a, (0x12, sp)
+      0000BC A2 00            [ 1]  174 	sbc	a, #0x00
+      0000BE 7B 11            [ 1]  175 	ld	a, (0x11, sp)
+      0000C0 A2 00            [ 1]  176 	sbc	a, #0x00
+      0000C2 25 0E            [ 1]  177 	jrc	00138$
+      0000C4 AE 1A 80         [ 2]  178 	ldw	x, #0x1a80
+      0000C7 13 13            [ 2]  179 	cpw	x, (0x13, sp)
+      0000C9 A6 06            [ 1]  180 	ld	a, #0x06
+      0000CB 12 12            [ 1]  181 	sbc	a, (0x12, sp)
+      0000CD 4F               [ 1]  182 	clr	a
+      0000CE 12 11            [ 1]  183 	sbc	a, (0x11, sp)
+      0000D0 24 11            [ 1]  184 	jrnc	00139$
+      0000D2                        185 00138$:
+      0000D2 AEr07r43         [ 2]  186 	ldw	x, #___str_0+0
+      0000D5 4B 6E            [ 1]  187 	push	#0x6e
+      0000D7 4B 00            [ 1]  188 	push	#0x00
+      0000D9 4B 00            [ 1]  189 	push	#0x00
+      0000DB 4B 00            [ 1]  190 	push	#0x00
+      0000DD 89               [ 2]  191 	pushw	x
+      0000DE CDr00r00         [ 4]  192 	call	_assert_failed
+      0000E1 5B 06            [ 2]  193 	addw	sp, #6
+      0000E3                        194 00139$:
+                                    195 ;	lib/stm8s_i2c.c: 115: I2C->FREQR &= (uint8_t)(~I2C_FREQR_FREQ);
+      0000E3 AE 52 12         [ 2]  196 	ldw	x, #0x5212
+      0000E6 F6               [ 1]  197 	ld	a, (x)
+      0000E7 A4 C0            [ 1]  198 	and	a, #0xc0
+      0000E9 F7               [ 1]  199 	ld	(x), a
+                                    200 ;	lib/stm8s_i2c.c: 117: I2C->FREQR |= InputClockFrequencyMHz;
+      0000EA AE 52 12         [ 2]  201 	ldw	x, #0x5212
+      0000ED F6               [ 1]  202 	ld	a, (x)
+      0000EE 1A 1A            [ 1]  203 	or	a, (0x1a, sp)
+      0000F0 AE 52 12         [ 2]  204 	ldw	x, #0x5212
+      0000F3 F7               [ 1]  205 	ld	(x), a
+                                    206 ;	lib/stm8s_i2c.c: 121: I2C->CR1 &= (uint8_t)(~I2C_CR1_PE);
+      0000F4 72 11 52 10      [ 1]  207 	bres	0x5210, #0
+                                    208 ;	lib/stm8s_i2c.c: 124: I2C->CCRH &= (uint8_t)(~(I2C_CCRH_FS | I2C_CCRH_DUTY | I2C_CCRH_CCR));
+      0000F8 AE 52 1C         [ 2]  209 	ldw	x, #0x521c
+      0000FB F6               [ 1]  210 	ld	a, (x)
+      0000FC A4 30            [ 1]  211 	and	a, #0x30
+      0000FE F7               [ 1]  212 	ld	(x), a
+                                    213 ;	lib/stm8s_i2c.c: 125: I2C->CCRL &= (uint8_t)(~I2C_CCRL_CCR);
+      0000FF AE 52 1B         [ 2]  214 	ldw	x, #0x521b
+      000102 F6               [ 1]  215 	ld	a, (x)
+      000103 35 00 52 1B      [ 1]  216 	mov	0x521b+0, #0x00
+                                    217 ;	lib/stm8s_i2c.c: 136: result = (uint16_t) ((InputClockFrequencyMHz * 1000000) / (OutputClockFrequencyHz * 3));
+      000107 5F               [ 1]  218 	clrw	x
+      000108 7B 1A            [ 1]  219 	ld	a, (0x1a, sp)
+      00010A 97               [ 1]  220 	ld	xl, a
+      00010B 90 5F            [ 1]  221 	clrw	y
+      00010D 89               [ 2]  222 	pushw	x
+      00010E 90 89            [ 2]  223 	pushw	y
+      000110 4B 40            [ 1]  224 	push	#0x40
+      000112 4B 42            [ 1]  225 	push	#0x42
+      000114 4B 0F            [ 1]  226 	push	#0x0f
+      000116 4B 00            [ 1]  227 	push	#0x00
+      000118 CDr00r00         [ 4]  228 	call	__mullong
+      00011B 5B 08            [ 2]  229 	addw	sp, #8
+      00011D 1F 0D            [ 2]  230 	ldw	(0x0d, sp), x
+      00011F 17 0B            [ 2]  231 	ldw	(0x0b, sp), y
+                                    232 ;	lib/stm8s_i2c.c: 128: if (OutputClockFrequencyHz > I2C_MAX_STANDARD_FREQ) /* FAST MODE */
+      000121 AE 86 A0         [ 2]  233 	ldw	x, #0x86a0
+      000124 13 13            [ 2]  234 	cpw	x, (0x13, sp)
+      000126 A6 01            [ 1]  235 	ld	a, #0x01
+      000128 12 12            [ 1]  236 	sbc	a, (0x12, sp)
+      00012A 4F               [ 1]  237 	clr	a
+      00012B 12 11            [ 1]  238 	sbc	a, (0x11, sp)
+      00012D 24 7A            [ 1]  239 	jrnc	00109$
+                                    240 ;	lib/stm8s_i2c.c: 131: tmpccrh = I2C_CCRH_FS;
+      00012F A6 80            [ 1]  241 	ld	a, #0x80
+      000131 6B 03            [ 1]  242 	ld	(0x03, sp), a
+                                    243 ;	lib/stm8s_i2c.c: 133: if (I2C_DutyCycle == I2C_DUTYCYCLE_2)
+      000133 0D 17            [ 1]  244 	tnz	(0x17, sp)
+      000135 26 23            [ 1]  245 	jrne	00102$
+                                    246 ;	lib/stm8s_i2c.c: 136: result = (uint16_t) ((InputClockFrequencyMHz * 1000000) / (OutputClockFrequencyHz * 3));
+      000137 1E 13            [ 2]  247 	ldw	x, (0x13, sp)
+      000139 89               [ 2]  248 	pushw	x
+      00013A 1E 13            [ 2]  249 	ldw	x, (0x13, sp)
+      00013C 89               [ 2]  250 	pushw	x
+      00013D 4B 03            [ 1]  251 	push	#0x03
+      00013F 5F               [ 1]  252 	clrw	x
+      000140 89               [ 2]  253 	pushw	x
+      000141 4B 00            [ 1]  254 	push	#0x00
+      000143 CDr00r00         [ 4]  255 	call	__mullong
+      000146 5B 08            [ 2]  256 	addw	sp, #8
+      000148 89               [ 2]  257 	pushw	x
+      000149 90 89            [ 2]  258 	pushw	y
+      00014B 1E 11            [ 2]  259 	ldw	x, (0x11, sp)
+      00014D 89               [ 2]  260 	pushw	x
+      00014E 1E 11            [ 2]  261 	ldw	x, (0x11, sp)
+      000150 89               [ 2]  262 	pushw	x
+      000151 CDr00r00         [ 4]  263 	call	__divulong
+      000154 5B 08            [ 2]  264 	addw	sp, #8
+      000156 1F 01            [ 2]  265 	ldw	(0x01, sp), x
+      000158 20 2B            [ 2]  266 	jra	00103$
+      00015A                        267 00102$:
+                                    268 ;	lib/stm8s_i2c.c: 141: result = (uint16_t) ((InputClockFrequencyMHz * 1000000) / (OutputClockFrequencyHz * 25));
+      00015A 1E 13            [ 2]  269 	ldw	x, (0x13, sp)
+      00015C 89               [ 2]  270 	pushw	x
+      00015D 1E 13            [ 2]  271 	ldw	x, (0x13, sp)
+      00015F 89               [ 2]  272 	pushw	x
+      000160 4B 19            [ 1]  273 	push	#0x19
+      000162 5F               [ 1]  274 	clrw	x
+      000163 89               [ 2]  275 	pushw	x
+      000164 4B 00            [ 1]  276 	push	#0x00
+      000166 CDr00r00         [ 4]  277 	call	__mullong
+      000169 5B 08            [ 2]  278 	addw	sp, #8
+      00016B 17 06            [ 2]  279 	ldw	(0x06, sp), y
+      00016D 9F               [ 1]  280 	ld	a, xl
+      00016E 88               [ 1]  281 	push	a
+      00016F 9E               [ 1]  282 	ld	a, xh
+      000170 88               [ 1]  283 	push	a
+      000171 1E 08            [ 2]  284 	ldw	x, (0x08, sp)
+      000173 89               [ 2]  285 	pushw	x
+      000174 1E 11            [ 2]  286 	ldw	x, (0x11, sp)
+      000176 89               [ 2]  287 	pushw	x
+      000177 1E 11            [ 2]  288 	ldw	x, (0x11, sp)
+      000179 89               [ 2]  289 	pushw	x
+      00017A CDr00r00         [ 4]  290 	call	__divulong
+      00017D 5B 08            [ 2]  291 	addw	sp, #8
+      00017F 1F 01            [ 2]  292 	ldw	(0x01, sp), x
+                                    293 ;	lib/stm8s_i2c.c: 143: tmpccrh |= I2C_CCRH_DUTY;
+      000181 A6 C0            [ 1]  294 	ld	a, #0xc0
+      000183 6B 03            [ 1]  295 	ld	(0x03, sp), a
+      000185                        296 00103$:
+                                    297 ;	lib/stm8s_i2c.c: 147: if (result < (uint16_t)0x01)
+      000185 1E 01            [ 2]  298 	ldw	x, (0x01, sp)
+      000187 A3 00 01         [ 2]  299 	cpw	x, #0x0001
+      00018A 24 05            [ 1]  300 	jrnc	00105$
+                                    301 ;	lib/stm8s_i2c.c: 150: result = (uint16_t)0x0001;
+      00018C AE 00 01         [ 2]  302 	ldw	x, #0x0001
+      00018F 1F 01            [ 2]  303 	ldw	(0x01, sp), x
+      000191                        304 00105$:
+                                    305 ;	lib/stm8s_i2c.c: 156: tmpval = ((InputClockFrequencyMHz * 3) / 10) + 1;
+      000191 7B 1A            [ 1]  306 	ld	a, (0x1a, sp)
+      000193 97               [ 1]  307 	ld	xl, a
+      000194 A6 03            [ 1]  308 	ld	a, #0x03
+      000196 42               [ 4]  309 	mul	x, a
+      000197 4B 0A            [ 1]  310 	push	#0x0a
+      000199 4B 00            [ 1]  311 	push	#0x00
+      00019B 89               [ 2]  312 	pushw	x
+      00019C CDr00r00         [ 4]  313 	call	__divsint
+      00019F 5B 04            [ 2]  314 	addw	sp, #4
+      0001A1 5C               [ 2]  315 	incw	x
+      0001A2 9F               [ 1]  316 	ld	a, xl
+                                    317 ;	lib/stm8s_i2c.c: 157: I2C->TRISER = (uint8_t)tmpval;
+      0001A3 AE 52 1D         [ 2]  318 	ldw	x, #0x521d
+      0001A6 F7               [ 1]  319 	ld	(x), a
+      0001A7 20 2A            [ 2]  320 	jra	00110$
+      0001A9                        321 00109$:
+                                    322 ;	lib/stm8s_i2c.c: 164: result = (uint16_t)((InputClockFrequencyMHz * 1000000) / (OutputClockFrequencyHz << (uint8_t)1));
+      0001A9 1E 13            [ 2]  323 	ldw	x, (0x13, sp)
+      0001AB 16 11            [ 2]  324 	ldw	y, (0x11, sp)
+      0001AD 58               [ 2]  325 	sllw	x
+      0001AE 90 59            [ 2]  326 	rlcw	y
+      0001B0 89               [ 2]  327 	pushw	x
+      0001B1 90 89            [ 2]  328 	pushw	y
+      0001B3 1E 11            [ 2]  329 	ldw	x, (0x11, sp)
+      0001B5 89               [ 2]  330 	pushw	x
+      0001B6 1E 11            [ 2]  331 	ldw	x, (0x11, sp)
+      0001B8 89               [ 2]  332 	pushw	x
+      0001B9 CDr00r00         [ 4]  333 	call	__divulong
+      0001BC 5B 08            [ 2]  334 	addw	sp, #8
+      0001BE 1F 01            [ 2]  335 	ldw	(0x01, sp), x
+                                    336 ;	lib/stm8s_i2c.c: 167: if (result < (uint16_t)0x0004)
+      0001C0 1E 01            [ 2]  337 	ldw	x, (0x01, sp)
+      0001C2 A3 00 04         [ 2]  338 	cpw	x, #0x0004
+      0001C5 24 05            [ 1]  339 	jrnc	00107$
+                                    340 ;	lib/stm8s_i2c.c: 170: result = (uint16_t)0x0004;
+      0001C7 AE 00 04         [ 2]  341 	ldw	x, #0x0004
+      0001CA 1F 01            [ 2]  342 	ldw	(0x01, sp), x
+      0001CC                        343 00107$:
+                                    344 ;	lib/stm8s_i2c.c: 176: I2C->TRISER = (uint8_t)(InputClockFrequencyMHz + (uint8_t)1);
+      0001CC 7B 1A            [ 1]  345 	ld	a, (0x1a, sp)
+      0001CE 4C               [ 1]  346 	inc	a
+      0001CF AE 52 1D         [ 2]  347 	ldw	x, #0x521d
+      0001D2 F7               [ 1]  348 	ld	(x), a
+      0001D3                        349 00110$:
+                                    350 ;	lib/stm8s_i2c.c: 181: I2C->CCRL = (uint8_t)result;
+      0001D3 7B 02            [ 1]  351 	ld	a, (0x02, sp)
+      0001D5 AE 52 1B         [ 2]  352 	ldw	x, #0x521b
+      0001D8 F7               [ 1]  353 	ld	(x), a
+                                    354 ;	lib/stm8s_i2c.c: 182: I2C->CCRH = (uint8_t)((uint8_t)((uint8_t)(result >> 8) & I2C_CCRH_CCR) | tmpccrh);
+      0001D9 7B 01            [ 1]  355 	ld	a, (0x01, sp)
+      0001DB 0F 04            [ 1]  356 	clr	(0x04, sp)
+      0001DD A4 0F            [ 1]  357 	and	a, #0x0f
+      0001DF 1A 03            [ 1]  358 	or	a, (0x03, sp)
+      0001E1 AE 52 1C         [ 2]  359 	ldw	x, #0x521c
+      0001E4 F7               [ 1]  360 	ld	(x), a
+                                    361 ;	lib/stm8s_i2c.c: 185: I2C->CR1 |= I2C_CR1_PE;
+      0001E5 72 10 52 10      [ 1]  362 	bset	0x5210, #0
+                                    363 ;	lib/stm8s_i2c.c: 188: I2C_AcknowledgeConfig(Ack);
+      0001E9 7B 18            [ 1]  364 	ld	a, (0x18, sp)
+      0001EB 88               [ 1]  365 	push	a
+      0001EC CDr03r12         [ 4]  366 	call	_I2C_AcknowledgeConfig
+      0001EF 84               [ 1]  367 	pop	a
+                                    368 ;	lib/stm8s_i2c.c: 191: I2C->OARL = (uint8_t)(OwnAddress);
+      0001F0 7B 16            [ 1]  369 	ld	a, (0x16, sp)
+      0001F2 AE 52 13         [ 2]  370 	ldw	x, #0x5213
+      0001F5 F7               [ 1]  371 	ld	(x), a
+                                    372 ;	lib/stm8s_i2c.c: 192: I2C->OARH = (uint8_t)((uint8_t)(AddMode | I2C_OARH_ADDCONF) |
+      0001F6 7B 19            [ 1]  373 	ld	a, (0x19, sp)
+      0001F8 AA 40            [ 1]  374 	or	a, #0x40
+      0001FA 6B 0A            [ 1]  375 	ld	(0x0a, sp), a
+                                    376 ;	lib/stm8s_i2c.c: 193: (uint8_t)((OwnAddress & (uint16_t)0x0300) >> (uint8_t)7));
+      0001FC 4F               [ 1]  377 	clr	a
+      0001FD 97               [ 1]  378 	ld	xl, a
+      0001FE 7B 15            [ 1]  379 	ld	a, (0x15, sp)
+      000200 A4 03            [ 1]  380 	and	a, #0x03
+      000202 95               [ 1]  381 	ld	xh, a
+      000203 A6 80            [ 1]  382 	ld	a, #0x80
+      000205 62               [ 2]  383 	div	x, a
+      000206 9F               [ 1]  384 	ld	a, xl
+      000207 1A 0A            [ 1]  385 	or	a, (0x0a, sp)
+      000209 AE 52 14         [ 2]  386 	ldw	x, #0x5214
+      00020C F7               [ 1]  387 	ld	(x), a
+      00020D 5B 0E            [ 2]  388 	addw	sp, #14
+      00020F 81               [ 4]  389 	ret
+                                    390 ;	lib/stm8s_i2c.c: 202: void I2C_Cmd(FunctionalState NewState)
+                                    391 ;	-----------------------------------------
+                                    392 ;	 function I2C_Cmd
+                                    393 ;	-----------------------------------------
+      000210                        394 _I2C_Cmd:
+                                    395 ;	lib/stm8s_i2c.c: 205: assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+      000210 0D 03            [ 1]  396 	tnz	(0x03, sp)
+      000212 27 17            [ 1]  397 	jreq	00107$
+      000214 7B 03            [ 1]  398 	ld	a, (0x03, sp)
+      000216 A1 01            [ 1]  399 	cp	a, #0x01
+      000218 27 11            [ 1]  400 	jreq	00107$
+      00021A AEr07r43         [ 2]  401 	ldw	x, #___str_0+0
+      00021D 4B CD            [ 1]  402 	push	#0xcd
+      00021F 4B 00            [ 1]  403 	push	#0x00
+      000221 4B 00            [ 1]  404 	push	#0x00
+      000223 4B 00            [ 1]  405 	push	#0x00
+      000225 89               [ 2]  406 	pushw	x
+      000226 CDr00r00         [ 4]  407 	call	_assert_failed
+      000229 5B 06            [ 2]  408 	addw	sp, #6
+      00022B                        409 00107$:
+                                    410 ;	lib/stm8s_i2c.c: 207: if (NewState != DISABLE)
+      00022B 0D 03            [ 1]  411 	tnz	(0x03, sp)
+      00022D 27 05            [ 1]  412 	jreq	00102$
+                                    413 ;	lib/stm8s_i2c.c: 210: I2C->CR1 |= I2C_CR1_PE;
+      00022F 72 10 52 10      [ 1]  414 	bset	0x5210, #0
+      000233 81               [ 4]  415 	ret
+      000234                        416 00102$:
+                                    417 ;	lib/stm8s_i2c.c: 215: I2C->CR1 &= (uint8_t)(~I2C_CR1_PE);
+      000234 72 11 52 10      [ 1]  418 	bres	0x5210, #0
+      000238 81               [ 4]  419 	ret
+                                    420 ;	lib/stm8s_i2c.c: 225: void I2C_GeneralCallCmd(FunctionalState NewState)
+                                    421 ;	-----------------------------------------
+                                    422 ;	 function I2C_GeneralCallCmd
+                                    423 ;	-----------------------------------------
+      000239                        424 _I2C_GeneralCallCmd:
+                                    425 ;	lib/stm8s_i2c.c: 228: assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+      000239 0D 03            [ 1]  426 	tnz	(0x03, sp)
+      00023B 27 17            [ 1]  427 	jreq	00107$
+      00023D 7B 03            [ 1]  428 	ld	a, (0x03, sp)
+      00023F A1 01            [ 1]  429 	cp	a, #0x01
+      000241 27 11            [ 1]  430 	jreq	00107$
+      000243 AEr07r43         [ 2]  431 	ldw	x, #___str_0+0
+      000246 4B E4            [ 1]  432 	push	#0xe4
+      000248 4B 00            [ 1]  433 	push	#0x00
+      00024A 4B 00            [ 1]  434 	push	#0x00
+      00024C 4B 00            [ 1]  435 	push	#0x00
+      00024E 89               [ 2]  436 	pushw	x
+      00024F CDr00r00         [ 4]  437 	call	_assert_failed
+      000252 5B 06            [ 2]  438 	addw	sp, #6
+      000254                        439 00107$:
+                                    440 ;	lib/stm8s_i2c.c: 230: if (NewState != DISABLE)
+      000254 0D 03            [ 1]  441 	tnz	(0x03, sp)
+      000256 27 08            [ 1]  442 	jreq	00102$
+                                    443 ;	lib/stm8s_i2c.c: 233: I2C->CR1 |= I2C_CR1_ENGC;
+      000258 AE 52 10         [ 2]  444 	ldw	x, #0x5210
+      00025B F6               [ 1]  445 	ld	a, (x)
+      00025C AA 40            [ 1]  446 	or	a, #0x40
+      00025E F7               [ 1]  447 	ld	(x), a
+      00025F 81               [ 4]  448 	ret
+      000260                        449 00102$:
+                                    450 ;	lib/stm8s_i2c.c: 238: I2C->CR1 &= (uint8_t)(~I2C_CR1_ENGC);
+      000260 AE 52 10         [ 2]  451 	ldw	x, #0x5210
+      000263 F6               [ 1]  452 	ld	a, (x)
+      000264 A4 BF            [ 1]  453 	and	a, #0xbf
+      000266 F7               [ 1]  454 	ld	(x), a
+      000267 81               [ 4]  455 	ret
+                                    456 ;	lib/stm8s_i2c.c: 250: void I2C_GenerateSTART(FunctionalState NewState)
+                                    457 ;	-----------------------------------------
+                                    458 ;	 function I2C_GenerateSTART
+                                    459 ;	-----------------------------------------
+      000268                        460 _I2C_GenerateSTART:
+                                    461 ;	lib/stm8s_i2c.c: 253: assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+      000268 0D 03            [ 1]  462 	tnz	(0x03, sp)
+      00026A 27 17            [ 1]  463 	jreq	00107$
+      00026C 7B 03            [ 1]  464 	ld	a, (0x03, sp)
+      00026E A1 01            [ 1]  465 	cp	a, #0x01
+      000270 27 11            [ 1]  466 	jreq	00107$
+      000272 AEr07r43         [ 2]  467 	ldw	x, #___str_0+0
+      000275 4B FD            [ 1]  468 	push	#0xfd
+      000277 4B 00            [ 1]  469 	push	#0x00
+      000279 4B 00            [ 1]  470 	push	#0x00
+      00027B 4B 00            [ 1]  471 	push	#0x00
+      00027D 89               [ 2]  472 	pushw	x
+      00027E CDr00r00         [ 4]  473 	call	_assert_failed
+      000281 5B 06            [ 2]  474 	addw	sp, #6
+      000283                        475 00107$:
+                                    476 ;	lib/stm8s_i2c.c: 255: if (NewState != DISABLE)
+      000283 0D 03            [ 1]  477 	tnz	(0x03, sp)
+      000285 27 05            [ 1]  478 	jreq	00102$
+                                    479 ;	lib/stm8s_i2c.c: 258: I2C->CR2 |= I2C_CR2_START;
+      000287 72 10 52 11      [ 1]  480 	bset	0x5211, #0
+      00028B 81               [ 4]  481 	ret
+      00028C                        482 00102$:
+                                    483 ;	lib/stm8s_i2c.c: 263: I2C->CR2 &= (uint8_t)(~I2C_CR2_START);
+      00028C 72 11 52 11      [ 1]  484 	bres	0x5211, #0
+      000290 81               [ 4]  485 	ret
+                                    486 ;	lib/stm8s_i2c.c: 273: void I2C_GenerateSTOP(FunctionalState NewState)
+                                    487 ;	-----------------------------------------
+                                    488 ;	 function I2C_GenerateSTOP
+                                    489 ;	-----------------------------------------
+      000291                        490 _I2C_GenerateSTOP:
+                                    491 ;	lib/stm8s_i2c.c: 276: assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+      000291 0D 03            [ 1]  492 	tnz	(0x03, sp)
+      000293 27 17            [ 1]  493 	jreq	00107$
+      000295 7B 03            [ 1]  494 	ld	a, (0x03, sp)
+      000297 A1 01            [ 1]  495 	cp	a, #0x01
+      000299 27 11            [ 1]  496 	jreq	00107$
+      00029B AEr07r43         [ 2]  497 	ldw	x, #___str_0+0
+      00029E 4B 14            [ 1]  498 	push	#0x14
+      0002A0 4B 01            [ 1]  499 	push	#0x01
+      0002A2 4B 00            [ 1]  500 	push	#0x00
+      0002A4 4B 00            [ 1]  501 	push	#0x00
+      0002A6 89               [ 2]  502 	pushw	x
+      0002A7 CDr00r00         [ 4]  503 	call	_assert_failed
+      0002AA 5B 06            [ 2]  504 	addw	sp, #6
+      0002AC                        505 00107$:
+                                    506 ;	lib/stm8s_i2c.c: 278: if (NewState != DISABLE)
+      0002AC 0D 03            [ 1]  507 	tnz	(0x03, sp)
+      0002AE 27 08            [ 1]  508 	jreq	00102$
+                                    509 ;	lib/stm8s_i2c.c: 281: I2C->CR2 |= I2C_CR2_STOP;
+      0002B0 AE 52 11         [ 2]  510 	ldw	x, #0x5211
+      0002B3 F6               [ 1]  511 	ld	a, (x)
+      0002B4 AA 02            [ 1]  512 	or	a, #0x02
+      0002B6 F7               [ 1]  513 	ld	(x), a
+      0002B7 81               [ 4]  514 	ret
+      0002B8                        515 00102$:
+                                    516 ;	lib/stm8s_i2c.c: 286: I2C->CR2 &= (uint8_t)(~I2C_CR2_STOP);
+      0002B8 AE 52 11         [ 2]  517 	ldw	x, #0x5211
+      0002BB F6               [ 1]  518 	ld	a, (x)
+      0002BC A4 FD            [ 1]  519 	and	a, #0xfd
+      0002BE F7               [ 1]  520 	ld	(x), a
+      0002BF 81               [ 4]  521 	ret
+                                    522 ;	lib/stm8s_i2c.c: 296: void I2C_SoftwareResetCmd(FunctionalState NewState)
+                                    523 ;	-----------------------------------------
+                                    524 ;	 function I2C_SoftwareResetCmd
+                                    525 ;	-----------------------------------------
+      0002C0                        526 _I2C_SoftwareResetCmd:
+                                    527 ;	lib/stm8s_i2c.c: 299: assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+      0002C0 0D 03            [ 1]  528 	tnz	(0x03, sp)
+      0002C2 27 17            [ 1]  529 	jreq	00107$
+      0002C4 7B 03            [ 1]  530 	ld	a, (0x03, sp)
+      0002C6 A1 01            [ 1]  531 	cp	a, #0x01
+      0002C8 27 11            [ 1]  532 	jreq	00107$
+      0002CA AEr07r43         [ 2]  533 	ldw	x, #___str_0+0
+      0002CD 4B 2B            [ 1]  534 	push	#0x2b
+      0002CF 4B 01            [ 1]  535 	push	#0x01
+      0002D1 4B 00            [ 1]  536 	push	#0x00
+      0002D3 4B 00            [ 1]  537 	push	#0x00
+      0002D5 89               [ 2]  538 	pushw	x
+      0002D6 CDr00r00         [ 4]  539 	call	_assert_failed
+      0002D9 5B 06            [ 2]  540 	addw	sp, #6
+      0002DB                        541 00107$:
+                                    542 ;	lib/stm8s_i2c.c: 301: if (NewState != DISABLE)
+      0002DB 0D 03            [ 1]  543 	tnz	(0x03, sp)
+      0002DD 27 05            [ 1]  544 	jreq	00102$
+                                    545 ;	lib/stm8s_i2c.c: 304: I2C->CR2 |= I2C_CR2_SWRST;
+      0002DF 72 1E 52 11      [ 1]  546 	bset	0x5211, #7
+      0002E3 81               [ 4]  547 	ret
+      0002E4                        548 00102$:
+                                    549 ;	lib/stm8s_i2c.c: 309: I2C->CR2 &= (uint8_t)(~I2C_CR2_SWRST);
+      0002E4 72 1F 52 11      [ 1]  550 	bres	0x5211, #7
+      0002E8 81               [ 4]  551 	ret
+                                    552 ;	lib/stm8s_i2c.c: 320: void I2C_StretchClockCmd(FunctionalState NewState)
+                                    553 ;	-----------------------------------------
+                                    554 ;	 function I2C_StretchClockCmd
+                                    555 ;	-----------------------------------------
+      0002E9                        556 _I2C_StretchClockCmd:
+                                    557 ;	lib/stm8s_i2c.c: 323: assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+      0002E9 0D 03            [ 1]  558 	tnz	(0x03, sp)
+      0002EB 27 17            [ 1]  559 	jreq	00107$
+      0002ED 7B 03            [ 1]  560 	ld	a, (0x03, sp)
+      0002EF A1 01            [ 1]  561 	cp	a, #0x01
+      0002F1 27 11            [ 1]  562 	jreq	00107$
+      0002F3 AEr07r43         [ 2]  563 	ldw	x, #___str_0+0
+      0002F6 4B 43            [ 1]  564 	push	#0x43
+      0002F8 4B 01            [ 1]  565 	push	#0x01
+      0002FA 4B 00            [ 1]  566 	push	#0x00
+      0002FC 4B 00            [ 1]  567 	push	#0x00
+      0002FE 89               [ 2]  568 	pushw	x
+      0002FF CDr00r00         [ 4]  569 	call	_assert_failed
+      000302 5B 06            [ 2]  570 	addw	sp, #6
+      000304                        571 00107$:
+                                    572 ;	lib/stm8s_i2c.c: 325: if (NewState != DISABLE)
+      000304 0D 03            [ 1]  573 	tnz	(0x03, sp)
+      000306 27 05            [ 1]  574 	jreq	00102$
+                                    575 ;	lib/stm8s_i2c.c: 328: I2C->CR1 &= (uint8_t)(~I2C_CR1_NOSTRETCH);
+      000308 72 1F 52 10      [ 1]  576 	bres	0x5210, #7
+      00030C 81               [ 4]  577 	ret
+      00030D                        578 00102$:
+                                    579 ;	lib/stm8s_i2c.c: 334: I2C->CR1 |= I2C_CR1_NOSTRETCH;
+      00030D 72 1E 52 10      [ 1]  580 	bset	0x5210, #7
+      000311 81               [ 4]  581 	ret
+                                    582 ;	lib/stm8s_i2c.c: 345: void I2C_AcknowledgeConfig(I2C_Ack_TypeDef Ack)
+                                    583 ;	-----------------------------------------
+                                    584 ;	 function I2C_AcknowledgeConfig
+                                    585 ;	-----------------------------------------
+      000312                        586 _I2C_AcknowledgeConfig:
+      000312 88               [ 1]  587 	push	a
+                                    588 ;	lib/stm8s_i2c.c: 348: assert_param(IS_I2C_ACK_OK(Ack));
+      000313 7B 04            [ 1]  589 	ld	a, (0x04, sp)
+      000315 A1 01            [ 1]  590 	cp	a, #0x01
+      000317 26 06            [ 1]  591 	jrne	00138$
+      000319 A6 01            [ 1]  592 	ld	a, #0x01
+      00031B 6B 01            [ 1]  593 	ld	(0x01, sp), a
+      00031D 20 02            [ 2]  594 	jra	00139$
+      00031F                        595 00138$:
+      00031F 0F 01            [ 1]  596 	clr	(0x01, sp)
+      000321                        597 00139$:
+      000321 0D 04            [ 1]  598 	tnz	(0x04, sp)
+      000323 27 1B            [ 1]  599 	jreq	00110$
+      000325 0D 01            [ 1]  600 	tnz	(0x01, sp)
+      000327 26 17            [ 1]  601 	jrne	00110$
+      000329 7B 04            [ 1]  602 	ld	a, (0x04, sp)
+      00032B A1 02            [ 1]  603 	cp	a, #0x02
+      00032D 27 11            [ 1]  604 	jreq	00110$
+      00032F AEr07r43         [ 2]  605 	ldw	x, #___str_0+0
+      000332 4B 5C            [ 1]  606 	push	#0x5c
+      000334 4B 01            [ 1]  607 	push	#0x01
+      000336 4B 00            [ 1]  608 	push	#0x00
+      000338 4B 00            [ 1]  609 	push	#0x00
+      00033A 89               [ 2]  610 	pushw	x
+      00033B CDr00r00         [ 4]  611 	call	_assert_failed
+      00033E 5B 06            [ 2]  612 	addw	sp, #6
+      000340                        613 00110$:
+                                    614 ;	lib/stm8s_i2c.c: 350: if (Ack == I2C_ACK_NONE)
+      000340 0D 04            [ 1]  615 	tnz	(0x04, sp)
+      000342 26 09            [ 1]  616 	jrne	00105$
+                                    617 ;	lib/stm8s_i2c.c: 353: I2C->CR2 &= (uint8_t)(~I2C_CR2_ACK);
+      000344 AE 52 11         [ 2]  618 	ldw	x, #0x5211
+      000347 F6               [ 1]  619 	ld	a, (x)
+      000348 A4 FB            [ 1]  620 	and	a, #0xfb
+      00034A F7               [ 1]  621 	ld	(x), a
+      00034B 20 1B            [ 2]  622 	jra	00107$
+      00034D                        623 00105$:
+                                    624 ;	lib/stm8s_i2c.c: 358: I2C->CR2 |= I2C_CR2_ACK;
+      00034D AE 52 11         [ 2]  625 	ldw	x, #0x5211
+      000350 F6               [ 1]  626 	ld	a, (x)
+      000351 AA 04            [ 1]  627 	or	a, #0x04
+      000353 F7               [ 1]  628 	ld	(x), a
+                                    629 ;	lib/stm8s_i2c.c: 360: if (Ack == I2C_ACK_CURR)
+      000354 0D 01            [ 1]  630 	tnz	(0x01, sp)
+      000356 27 09            [ 1]  631 	jreq	00102$
+                                    632 ;	lib/stm8s_i2c.c: 363: I2C->CR2 &= (uint8_t)(~I2C_CR2_POS);
+      000358 AE 52 11         [ 2]  633 	ldw	x, #0x5211
+      00035B F6               [ 1]  634 	ld	a, (x)
+      00035C A4 F7            [ 1]  635 	and	a, #0xf7
+      00035E F7               [ 1]  636 	ld	(x), a
+      00035F 20 07            [ 2]  637 	jra	00107$
+      000361                        638 00102$:
+                                    639 ;	lib/stm8s_i2c.c: 368: I2C->CR2 |= I2C_CR2_POS;
+      000361 AE 52 11         [ 2]  640 	ldw	x, #0x5211
+      000364 F6               [ 1]  641 	ld	a, (x)
+      000365 AA 08            [ 1]  642 	or	a, #0x08
+      000367 F7               [ 1]  643 	ld	(x), a
+      000368                        644 00107$:
+      000368 84               [ 1]  645 	pop	a
+      000369 81               [ 4]  646 	ret
+                                    647 ;	lib/stm8s_i2c.c: 381: void I2C_ITConfig(I2C_IT_TypeDef I2C_IT, FunctionalState NewState)
+                                    648 ;	-----------------------------------------
+                                    649 ;	 function I2C_ITConfig
+                                    650 ;	-----------------------------------------
+      00036A                        651 _I2C_ITConfig:
+      00036A 88               [ 1]  652 	push	a
+                                    653 ;	lib/stm8s_i2c.c: 384: assert_param(IS_I2C_INTERRUPT_OK(I2C_IT));
+      00036B 7B 04            [ 1]  654 	ld	a, (0x04, sp)
+      00036D A1 01            [ 1]  655 	cp	a, #0x01
+      00036F 27 35            [ 1]  656 	jreq	00107$
+      000371 7B 04            [ 1]  657 	ld	a, (0x04, sp)
+      000373 A1 02            [ 1]  658 	cp	a, #0x02
+      000375 27 2F            [ 1]  659 	jreq	00107$
+      000377 7B 04            [ 1]  660 	ld	a, (0x04, sp)
+      000379 A1 04            [ 1]  661 	cp	a, #0x04
+      00037B 27 29            [ 1]  662 	jreq	00107$
+      00037D 7B 04            [ 1]  663 	ld	a, (0x04, sp)
+      00037F A1 03            [ 1]  664 	cp	a, #0x03
+      000381 27 23            [ 1]  665 	jreq	00107$
+      000383 7B 04            [ 1]  666 	ld	a, (0x04, sp)
+      000385 A1 05            [ 1]  667 	cp	a, #0x05
+      000387 27 1D            [ 1]  668 	jreq	00107$
+      000389 7B 04            [ 1]  669 	ld	a, (0x04, sp)
+      00038B A1 06            [ 1]  670 	cp	a, #0x06
+      00038D 27 17            [ 1]  671 	jreq	00107$
+      00038F 7B 04            [ 1]  672 	ld	a, (0x04, sp)
+      000391 A1 07            [ 1]  673 	cp	a, #0x07
+      000393 27 11            [ 1]  674 	jreq	00107$
+      000395 AEr07r43         [ 2]  675 	ldw	x, #___str_0+0
+      000398 4B 80            [ 1]  676 	push	#0x80
+      00039A 4B 01            [ 1]  677 	push	#0x01
+      00039C 4B 00            [ 1]  678 	push	#0x00
+      00039E 4B 00            [ 1]  679 	push	#0x00
+      0003A0 89               [ 2]  680 	pushw	x
+      0003A1 CDr00r00         [ 4]  681 	call	_assert_failed
+      0003A4 5B 06            [ 2]  682 	addw	sp, #6
+      0003A6                        683 00107$:
+                                    684 ;	lib/stm8s_i2c.c: 385: assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+      0003A6 0D 05            [ 1]  685 	tnz	(0x05, sp)
+      0003A8 27 17            [ 1]  686 	jreq	00127$
+      0003AA 7B 05            [ 1]  687 	ld	a, (0x05, sp)
+      0003AC A1 01            [ 1]  688 	cp	a, #0x01
+      0003AE 27 11            [ 1]  689 	jreq	00127$
+      0003B0 AEr07r43         [ 2]  690 	ldw	x, #___str_0+0
+      0003B3 4B 81            [ 1]  691 	push	#0x81
+      0003B5 4B 01            [ 1]  692 	push	#0x01
+      0003B7 4B 00            [ 1]  693 	push	#0x00
+      0003B9 4B 00            [ 1]  694 	push	#0x00
+      0003BB 89               [ 2]  695 	pushw	x
+      0003BC CDr00r00         [ 4]  696 	call	_assert_failed
+      0003BF 5B 06            [ 2]  697 	addw	sp, #6
+      0003C1                        698 00127$:
+                                    699 ;	lib/stm8s_i2c.c: 387: if (NewState != DISABLE)
+      0003C1 0D 05            [ 1]  700 	tnz	(0x05, sp)
+      0003C3 27 0C            [ 1]  701 	jreq	00102$
+                                    702 ;	lib/stm8s_i2c.c: 390: I2C->ITR |= (uint8_t)I2C_IT;
+      0003C5 AE 52 1A         [ 2]  703 	ldw	x, #0x521a
+      0003C8 F6               [ 1]  704 	ld	a, (x)
+      0003C9 1A 04            [ 1]  705 	or	a, (0x04, sp)
+      0003CB AE 52 1A         [ 2]  706 	ldw	x, #0x521a
+      0003CE F7               [ 1]  707 	ld	(x), a
+      0003CF 20 0F            [ 2]  708 	jra	00104$
+      0003D1                        709 00102$:
+                                    710 ;	lib/stm8s_i2c.c: 395: I2C->ITR &= (uint8_t)(~(uint8_t)I2C_IT);
+      0003D1 AE 52 1A         [ 2]  711 	ldw	x, #0x521a
+      0003D4 F6               [ 1]  712 	ld	a, (x)
+      0003D5 6B 01            [ 1]  713 	ld	(0x01, sp), a
+      0003D7 7B 04            [ 1]  714 	ld	a, (0x04, sp)
+      0003D9 43               [ 1]  715 	cpl	a
+      0003DA 14 01            [ 1]  716 	and	a, (0x01, sp)
+      0003DC AE 52 1A         [ 2]  717 	ldw	x, #0x521a
+      0003DF F7               [ 1]  718 	ld	(x), a
+      0003E0                        719 00104$:
+      0003E0 84               [ 1]  720 	pop	a
+      0003E1 81               [ 4]  721 	ret
+                                    722 ;	lib/stm8s_i2c.c: 405: void I2C_FastModeDutyCycleConfig(I2C_DutyCycle_TypeDef I2C_DutyCycle)
+                                    723 ;	-----------------------------------------
+                                    724 ;	 function I2C_FastModeDutyCycleConfig
+                                    725 ;	-----------------------------------------
+      0003E2                        726 _I2C_FastModeDutyCycleConfig:
+      0003E2 88               [ 1]  727 	push	a
+                                    728 ;	lib/stm8s_i2c.c: 408: assert_param(IS_I2C_DUTYCYCLE_OK(I2C_DutyCycle));
+      0003E3 7B 04            [ 1]  729 	ld	a, (0x04, sp)
+      0003E5 A1 40            [ 1]  730 	cp	a, #0x40
+      0003E7 26 06            [ 1]  731 	jrne	00124$
+      0003E9 A6 01            [ 1]  732 	ld	a, #0x01
+      0003EB 6B 01            [ 1]  733 	ld	(0x01, sp), a
+      0003ED 20 02            [ 2]  734 	jra	00125$
+      0003EF                        735 00124$:
+      0003EF 0F 01            [ 1]  736 	clr	(0x01, sp)
+      0003F1                        737 00125$:
+      0003F1 0D 04            [ 1]  738 	tnz	(0x04, sp)
+      0003F3 27 15            [ 1]  739 	jreq	00107$
+      0003F5 0D 01            [ 1]  740 	tnz	(0x01, sp)
+      0003F7 26 11            [ 1]  741 	jrne	00107$
+      0003F9 AEr07r43         [ 2]  742 	ldw	x, #___str_0+0
+      0003FC 4B 98            [ 1]  743 	push	#0x98
+      0003FE 4B 01            [ 1]  744 	push	#0x01
+      000400 4B 00            [ 1]  745 	push	#0x00
+      000402 4B 00            [ 1]  746 	push	#0x00
+      000404 89               [ 2]  747 	pushw	x
+      000405 CDr00r00         [ 4]  748 	call	_assert_failed
+      000408 5B 06            [ 2]  749 	addw	sp, #6
+      00040A                        750 00107$:
+                                    751 ;	lib/stm8s_i2c.c: 410: if (I2C_DutyCycle == I2C_DUTYCYCLE_16_9)
+      00040A 0D 01            [ 1]  752 	tnz	(0x01, sp)
+      00040C 27 09            [ 1]  753 	jreq	00102$
+                                    754 ;	lib/stm8s_i2c.c: 413: I2C->CCRH |= I2C_CCRH_DUTY;
+      00040E AE 52 1C         [ 2]  755 	ldw	x, #0x521c
+      000411 F6               [ 1]  756 	ld	a, (x)
+      000412 AA 40            [ 1]  757 	or	a, #0x40
+      000414 F7               [ 1]  758 	ld	(x), a
+      000415 20 07            [ 2]  759 	jra	00104$
+      000417                        760 00102$:
+                                    761 ;	lib/stm8s_i2c.c: 418: I2C->CCRH &= (uint8_t)(~I2C_CCRH_DUTY);
+      000417 AE 52 1C         [ 2]  762 	ldw	x, #0x521c
+      00041A F6               [ 1]  763 	ld	a, (x)
+      00041B A4 BF            [ 1]  764 	and	a, #0xbf
+      00041D F7               [ 1]  765 	ld	(x), a
+      00041E                        766 00104$:
+      00041E 84               [ 1]  767 	pop	a
+      00041F 81               [ 4]  768 	ret
+                                    769 ;	lib/stm8s_i2c.c: 427: uint8_t I2C_ReceiveData(void)
+                                    770 ;	-----------------------------------------
+                                    771 ;	 function I2C_ReceiveData
+                                    772 ;	-----------------------------------------
+      000420                        773 _I2C_ReceiveData:
+                                    774 ;	lib/stm8s_i2c.c: 430: return ((uint8_t)I2C->DR);
+      000420 AE 52 16         [ 2]  775 	ldw	x, #0x5216
+      000423 F6               [ 1]  776 	ld	a, (x)
+      000424 81               [ 4]  777 	ret
+                                    778 ;	lib/stm8s_i2c.c: 440: void I2C_Send7bitAddress(uint8_t Address, I2C_Direction_TypeDef Direction)
+                                    779 ;	-----------------------------------------
+                                    780 ;	 function I2C_Send7bitAddress
+                                    781 ;	-----------------------------------------
+      000425                        782 _I2C_Send7bitAddress:
+                                    783 ;	lib/stm8s_i2c.c: 443: assert_param(IS_I2C_ADDRESS_OK(Address));
+      000425 7B 03            [ 1]  784 	ld	a, (0x03, sp)
+      000427 44               [ 1]  785 	srl	a
+      000428 24 11            [ 1]  786 	jrnc	00104$
+      00042A AEr07r43         [ 2]  787 	ldw	x, #___str_0+0
+      00042D 4B BB            [ 1]  788 	push	#0xbb
+      00042F 4B 01            [ 1]  789 	push	#0x01
+      000431 4B 00            [ 1]  790 	push	#0x00
+      000433 4B 00            [ 1]  791 	push	#0x00
+      000435 89               [ 2]  792 	pushw	x
+      000436 CDr00r00         [ 4]  793 	call	_assert_failed
+      000439 5B 06            [ 2]  794 	addw	sp, #6
+      00043B                        795 00104$:
+                                    796 ;	lib/stm8s_i2c.c: 444: assert_param(IS_I2C_DIRECTION_OK(Direction));
+      00043B 0D 04            [ 1]  797 	tnz	(0x04, sp)
+      00043D 27 17            [ 1]  798 	jreq	00106$
+      00043F 7B 04            [ 1]  799 	ld	a, (0x04, sp)
+      000441 A1 01            [ 1]  800 	cp	a, #0x01
+      000443 27 11            [ 1]  801 	jreq	00106$
+      000445 AEr07r43         [ 2]  802 	ldw	x, #___str_0+0
+      000448 4B BC            [ 1]  803 	push	#0xbc
+      00044A 4B 01            [ 1]  804 	push	#0x01
+      00044C 4B 00            [ 1]  805 	push	#0x00
+      00044E 4B 00            [ 1]  806 	push	#0x00
+      000450 89               [ 2]  807 	pushw	x
+      000451 CDr00r00         [ 4]  808 	call	_assert_failed
+      000454 5B 06            [ 2]  809 	addw	sp, #6
+      000456                        810 00106$:
+                                    811 ;	lib/stm8s_i2c.c: 447: Address &= (uint8_t)0xFE;
+      000456 7B 03            [ 1]  812 	ld	a, (0x03, sp)
+      000458 A4 FE            [ 1]  813 	and	a, #0xfe
+      00045A 6B 03            [ 1]  814 	ld	(0x03, sp), a
+                                    815 ;	lib/stm8s_i2c.c: 450: I2C->DR = (uint8_t)(Address | (uint8_t)Direction);
+      00045C 7B 03            [ 1]  816 	ld	a, (0x03, sp)
+      00045E 1A 04            [ 1]  817 	or	a, (0x04, sp)
+      000460 AE 52 16         [ 2]  818 	ldw	x, #0x5216
+      000463 F7               [ 1]  819 	ld	(x), a
+      000464 81               [ 4]  820 	ret
+                                    821 ;	lib/stm8s_i2c.c: 458: void I2C_SendData(uint8_t Data)
+                                    822 ;	-----------------------------------------
+                                    823 ;	 function I2C_SendData
+                                    824 ;	-----------------------------------------
+      000465                        825 _I2C_SendData:
+                                    826 ;	lib/stm8s_i2c.c: 461: I2C->DR = Data;
+      000465 AE 52 16         [ 2]  827 	ldw	x, #0x5216
+      000468 7B 03            [ 1]  828 	ld	a, (0x03, sp)
+      00046A F7               [ 1]  829 	ld	(x), a
+      00046B 81               [ 4]  830 	ret
+                                    831 ;	lib/stm8s_i2c.c: 578: ErrorStatus I2C_CheckEvent(I2C_Event_TypeDef I2C_Event)
+                                    832 ;	-----------------------------------------
+                                    833 ;	 function I2C_CheckEvent
+                                    834 ;	-----------------------------------------
+      00046C                        835 _I2C_CheckEvent:
+      00046C 52 08            [ 2]  836 	sub	sp, #8
+                                    837 ;	lib/stm8s_i2c.c: 580: __IO uint16_t lastevent = 0x00;
+      00046E 5F               [ 1]  838 	clrw	x
+      00046F 1F 02            [ 2]  839 	ldw	(0x02, sp), x
+                                    840 ;	lib/stm8s_i2c.c: 586: assert_param(IS_I2C_EVENT_OK(I2C_Event));
+      000471 1E 0B            [ 2]  841 	ldw	x, (0x0b, sp)
+      000473 A3 00 04         [ 2]  842 	cpw	x, #0x0004
+      000476 26 06            [ 1]  843 	jrne	00229$
+      000478 A6 01            [ 1]  844 	ld	a, #0x01
+      00047A 6B 04            [ 1]  845 	ld	(0x04, sp), a
+      00047C 20 02            [ 2]  846 	jra	00230$
+      00047E                        847 00229$:
+      00047E 0F 04            [ 1]  848 	clr	(0x04, sp)
+      000480                        849 00230$:
+      000480 1E 0B            [ 2]  850 	ldw	x, (0x0b, sp)
+      000482 A3 06 82         [ 2]  851 	cpw	x, #0x0682
+      000485 27 77            [ 1]  852 	jreq	00110$
+      000487 1E 0B            [ 2]  853 	ldw	x, (0x0b, sp)
+      000489 A3 02 02         [ 2]  854 	cpw	x, #0x0202
+      00048C 27 70            [ 1]  855 	jreq	00110$
+      00048E 1E 0B            [ 2]  856 	ldw	x, (0x0b, sp)
+      000490 A3 12 00         [ 2]  857 	cpw	x, #0x1200
+      000493 27 69            [ 1]  858 	jreq	00110$
+      000495 1E 0B            [ 2]  859 	ldw	x, (0x0b, sp)
+      000497 A3 02 40         [ 2]  860 	cpw	x, #0x0240
+      00049A 27 62            [ 1]  861 	jreq	00110$
+      00049C 1E 0B            [ 2]  862 	ldw	x, (0x0b, sp)
+      00049E A3 03 50         [ 2]  863 	cpw	x, #0x0350
+      0004A1 27 5B            [ 1]  864 	jreq	00110$
+      0004A3 1E 0B            [ 2]  865 	ldw	x, (0x0b, sp)
+      0004A5 A3 06 84         [ 2]  866 	cpw	x, #0x0684
+      0004A8 27 54            [ 1]  867 	jreq	00110$
+      0004AA 1E 0B            [ 2]  868 	ldw	x, (0x0b, sp)
+      0004AC A3 07 94         [ 2]  869 	cpw	x, #0x0794
+      0004AF 27 4D            [ 1]  870 	jreq	00110$
+      0004B1 0D 04            [ 1]  871 	tnz	(0x04, sp)
+      0004B3 26 49            [ 1]  872 	jrne	00110$
+      0004B5 1E 0B            [ 2]  873 	ldw	x, (0x0b, sp)
+      0004B7 A3 00 10         [ 2]  874 	cpw	x, #0x0010
+      0004BA 27 42            [ 1]  875 	jreq	00110$
+      0004BC 1E 0B            [ 2]  876 	ldw	x, (0x0b, sp)
+      0004BE A3 03 01         [ 2]  877 	cpw	x, #0x0301
+      0004C1 27 3B            [ 1]  878 	jreq	00110$
+      0004C3 1E 0B            [ 2]  879 	ldw	x, (0x0b, sp)
+      0004C5 A3 07 82         [ 2]  880 	cpw	x, #0x0782
+      0004C8 27 34            [ 1]  881 	jreq	00110$
+      0004CA 1E 0B            [ 2]  882 	ldw	x, (0x0b, sp)
+      0004CC A3 03 02         [ 2]  883 	cpw	x, #0x0302
+      0004CF 27 2D            [ 1]  884 	jreq	00110$
+      0004D1 1E 0B            [ 2]  885 	ldw	x, (0x0b, sp)
+      0004D3 A3 03 40         [ 2]  886 	cpw	x, #0x0340
+      0004D6 27 26            [ 1]  887 	jreq	00110$
+      0004D8 1E 0B            [ 2]  888 	ldw	x, (0x0b, sp)
+      0004DA A3 07 84         [ 2]  889 	cpw	x, #0x0784
+      0004DD 27 1F            [ 1]  890 	jreq	00110$
+      0004DF 1E 0B            [ 2]  891 	ldw	x, (0x0b, sp)
+      0004E1 A3 07 80         [ 2]  892 	cpw	x, #0x0780
+      0004E4 27 18            [ 1]  893 	jreq	00110$
+      0004E6 1E 0B            [ 2]  894 	ldw	x, (0x0b, sp)
+      0004E8 A3 03 08         [ 2]  895 	cpw	x, #0x0308
+      0004EB 27 11            [ 1]  896 	jreq	00110$
+      0004ED AEr07r43         [ 2]  897 	ldw	x, #___str_0+0
+      0004F0 4B 4A            [ 1]  898 	push	#0x4a
+      0004F2 4B 02            [ 1]  899 	push	#0x02
+      0004F4 4B 00            [ 1]  900 	push	#0x00
+      0004F6 4B 00            [ 1]  901 	push	#0x00
+      0004F8 89               [ 2]  902 	pushw	x
+      0004F9 CDr00r00         [ 4]  903 	call	_assert_failed
+      0004FC 5B 06            [ 2]  904 	addw	sp, #6
+      0004FE                        905 00110$:
+                                    906 ;	lib/stm8s_i2c.c: 588: if (I2C_Event == I2C_EVENT_SLAVE_ACK_FAILURE)
+      0004FE 0D 04            [ 1]  907 	tnz	(0x04, sp)
+      000500 27 0C            [ 1]  908 	jreq	00102$
+                                    909 ;	lib/stm8s_i2c.c: 590: lastevent = I2C->SR2 & I2C_SR2_AF;
+      000502 AE 52 18         [ 2]  910 	ldw	x, #0x5218
+      000505 F6               [ 1]  911 	ld	a, (x)
+      000506 A4 04            [ 1]  912 	and	a, #0x04
+      000508 5F               [ 1]  913 	clrw	x
+      000509 97               [ 1]  914 	ld	xl, a
+      00050A 1F 02            [ 2]  915 	ldw	(0x02, sp), x
+      00050C 20 1A            [ 2]  916 	jra	00103$
+      00050E                        917 00102$:
+                                    918 ;	lib/stm8s_i2c.c: 594: flag1 = I2C->SR1;
+      00050E AE 52 17         [ 2]  919 	ldw	x, #0x5217
+      000511 F6               [ 1]  920 	ld	a, (x)
+      000512 6B 01            [ 1]  921 	ld	(0x01, sp), a
+                                    922 ;	lib/stm8s_i2c.c: 595: flag2 = I2C->SR3;
+      000514 AE 52 19         [ 2]  923 	ldw	x, #0x5219
+      000517 F6               [ 1]  924 	ld	a, (x)
+                                    925 ;	lib/stm8s_i2c.c: 596: lastevent = ((uint16_t)((uint16_t)flag2 << (uint16_t)8) | (uint16_t)flag1);
+      000518 95               [ 1]  926 	ld	xh, a
+      000519 4F               [ 1]  927 	clr	a
+      00051A 0F 08            [ 1]  928 	clr	(0x08, sp)
+      00051C 7B 01            [ 1]  929 	ld	a, (0x01, sp)
+      00051E 0F 05            [ 1]  930 	clr	(0x05, sp)
+      000520 1A 08            [ 1]  931 	or	a, (0x08, sp)
+      000522 02               [ 1]  932 	rlwa	x
+      000523 1A 05            [ 1]  933 	or	a, (0x05, sp)
+      000525 95               [ 1]  934 	ld	xh, a
+      000526 1F 02            [ 2]  935 	ldw	(0x02, sp), x
+      000528                        936 00103$:
+                                    937 ;	lib/stm8s_i2c.c: 599: if (((uint16_t)lastevent & (uint16_t)I2C_Event) == (uint16_t)I2C_Event)
+      000528 7B 03            [ 1]  938 	ld	a, (0x03, sp)
+      00052A 14 0C            [ 1]  939 	and	a, (0x0c, sp)
+      00052C 97               [ 1]  940 	ld	xl, a
+      00052D 7B 02            [ 1]  941 	ld	a, (0x02, sp)
+      00052F 14 0B            [ 1]  942 	and	a, (0x0b, sp)
+      000531 95               [ 1]  943 	ld	xh, a
+      000532 13 0B            [ 2]  944 	cpw	x, (0x0b, sp)
+      000534 26 03            [ 1]  945 	jrne	00105$
+                                    946 ;	lib/stm8s_i2c.c: 602: status = SUCCESS;
+      000536 A6 01            [ 1]  947 	ld	a, #0x01
+                                    948 ;	lib/stm8s_i2c.c: 607: status = ERROR;
+      000538 21                     949 	.byte 0x21
+      000539                        950 00105$:
+      000539 4F               [ 1]  951 	clr	a
+      00053A                        952 00106$:
+                                    953 ;	lib/stm8s_i2c.c: 611: return status;
+      00053A 5B 08            [ 2]  954 	addw	sp, #8
+      00053C 81               [ 4]  955 	ret
+                                    956 ;	lib/stm8s_i2c.c: 628: I2C_Event_TypeDef I2C_GetLastEvent(void)
+                                    957 ;	-----------------------------------------
+                                    958 ;	 function I2C_GetLastEvent
+                                    959 ;	-----------------------------------------
+      00053D                        960 _I2C_GetLastEvent:
+      00053D 52 04            [ 2]  961 	sub	sp, #4
+                                    962 ;	lib/stm8s_i2c.c: 630: __IO uint16_t lastevent = 0;
+      00053F 5F               [ 1]  963 	clrw	x
+      000540 1F 03            [ 2]  964 	ldw	(0x03, sp), x
+                                    965 ;	lib/stm8s_i2c.c: 634: if ((I2C->SR2 & I2C_SR2_AF) != 0x00)
+      000542 AE 52 18         [ 2]  966 	ldw	x, #0x5218
+      000545 F6               [ 1]  967 	ld	a, (x)
+      000546 A5 04            [ 1]  968 	bcp	a, #0x04
+      000548 27 07            [ 1]  969 	jreq	00102$
+                                    970 ;	lib/stm8s_i2c.c: 636: lastevent = I2C_EVENT_SLAVE_ACK_FAILURE;
+      00054A AE 00 04         [ 2]  971 	ldw	x, #0x0004
+      00054D 1F 03            [ 2]  972 	ldw	(0x03, sp), x
+      00054F 20 17            [ 2]  973 	jra	00103$
+      000551                        974 00102$:
+                                    975 ;	lib/stm8s_i2c.c: 641: flag1 = I2C->SR1;
+      000551 AE 52 17         [ 2]  976 	ldw	x, #0x5217
+      000554 F6               [ 1]  977 	ld	a, (x)
+      000555 5F               [ 1]  978 	clrw	x
+      000556 97               [ 1]  979 	ld	xl, a
+      000557 1F 01            [ 2]  980 	ldw	(0x01, sp), x
+                                    981 ;	lib/stm8s_i2c.c: 642: flag2 = I2C->SR3;
+      000559 AE 52 19         [ 2]  982 	ldw	x, #0x5219
+      00055C F6               [ 1]  983 	ld	a, (x)
+      00055D 95               [ 1]  984 	ld	xh, a
+      00055E 4F               [ 1]  985 	clr	a
+                                    986 ;	lib/stm8s_i2c.c: 645: lastevent = ((uint16_t)((uint16_t)flag2 << 8) | (uint16_t)flag1);
+      00055F 4F               [ 1]  987 	clr	a
+      000560 1A 02            [ 1]  988 	or	a, (0x02, sp)
+      000562 02               [ 1]  989 	rlwa	x
+      000563 1A 01            [ 1]  990 	or	a, (0x01, sp)
+      000565 95               [ 1]  991 	ld	xh, a
+      000566 1F 03            [ 2]  992 	ldw	(0x03, sp), x
+      000568                        993 00103$:
+                                    994 ;	lib/stm8s_i2c.c: 648: return (I2C_Event_TypeDef)lastevent;
+      000568 1E 03            [ 2]  995 	ldw	x, (0x03, sp)
+      00056A 5B 04            [ 2]  996 	addw	sp, #4
+      00056C 81               [ 4]  997 	ret
+                                    998 ;	lib/stm8s_i2c.c: 679: FlagStatus I2C_GetFlagStatus(I2C_Flag_TypeDef I2C_Flag)
+                                    999 ;	-----------------------------------------
+                                   1000 ;	 function I2C_GetFlagStatus
+                                   1001 ;	-----------------------------------------
+      00056D                       1002 _I2C_GetFlagStatus:
+      00056D 52 03            [ 2] 1003 	sub	sp, #3
+                                   1004 ;	lib/stm8s_i2c.c: 681: uint8_t tempreg = 0;
+      00056F 0F 03            [ 1] 1005 	clr	(0x03, sp)
+                                   1006 ;	lib/stm8s_i2c.c: 686: assert_param(IS_I2C_FLAG_OK(I2C_Flag));
+      000571 1E 06            [ 2] 1007 	ldw	x, (0x06, sp)
+      000573 A3 01 80         [ 2] 1008 	cpw	x, #0x0180
+      000576 27 7A            [ 1] 1009 	jreq	00112$
+      000578 1E 06            [ 2] 1010 	ldw	x, (0x06, sp)
+      00057A A3 01 40         [ 2] 1011 	cpw	x, #0x0140
+      00057D 27 73            [ 1] 1012 	jreq	00112$
+      00057F 1E 06            [ 2] 1013 	ldw	x, (0x06, sp)
+      000581 A3 01 10         [ 2] 1014 	cpw	x, #0x0110
+      000584 27 6C            [ 1] 1015 	jreq	00112$
+      000586 1E 06            [ 2] 1016 	ldw	x, (0x06, sp)
+      000588 A3 01 08         [ 2] 1017 	cpw	x, #0x0108
+      00058B 27 65            [ 1] 1018 	jreq	00112$
+      00058D 1E 06            [ 2] 1019 	ldw	x, (0x06, sp)
+      00058F A3 01 04         [ 2] 1020 	cpw	x, #0x0104
+      000592 27 5E            [ 1] 1021 	jreq	00112$
+      000594 1E 06            [ 2] 1022 	ldw	x, (0x06, sp)
+      000596 A3 01 02         [ 2] 1023 	cpw	x, #0x0102
+      000599 27 57            [ 1] 1024 	jreq	00112$
+      00059B 1E 06            [ 2] 1025 	ldw	x, (0x06, sp)
+      00059D A3 01 01         [ 2] 1026 	cpw	x, #0x0101
+      0005A0 27 50            [ 1] 1027 	jreq	00112$
+      0005A2 1E 06            [ 2] 1028 	ldw	x, (0x06, sp)
+      0005A4 A3 02 20         [ 2] 1029 	cpw	x, #0x0220
+      0005A7 27 49            [ 1] 1030 	jreq	00112$
+      0005A9 1E 06            [ 2] 1031 	ldw	x, (0x06, sp)
+      0005AB A3 02 08         [ 2] 1032 	cpw	x, #0x0208
+      0005AE 27 42            [ 1] 1033 	jreq	00112$
+      0005B0 1E 06            [ 2] 1034 	ldw	x, (0x06, sp)
+      0005B2 A3 02 04         [ 2] 1035 	cpw	x, #0x0204
+      0005B5 27 3B            [ 1] 1036 	jreq	00112$
+      0005B7 1E 06            [ 2] 1037 	ldw	x, (0x06, sp)
+      0005B9 A3 02 02         [ 2] 1038 	cpw	x, #0x0202
+      0005BC 27 34            [ 1] 1039 	jreq	00112$
+      0005BE 1E 06            [ 2] 1040 	ldw	x, (0x06, sp)
+      0005C0 A3 02 01         [ 2] 1041 	cpw	x, #0x0201
+      0005C3 27 2D            [ 1] 1042 	jreq	00112$
+      0005C5 1E 06            [ 2] 1043 	ldw	x, (0x06, sp)
+      0005C7 A3 03 10         [ 2] 1044 	cpw	x, #0x0310
+      0005CA 27 26            [ 1] 1045 	jreq	00112$
+      0005CC 1E 06            [ 2] 1046 	ldw	x, (0x06, sp)
+      0005CE A3 03 04         [ 2] 1047 	cpw	x, #0x0304
+      0005D1 27 1F            [ 1] 1048 	jreq	00112$
+      0005D3 1E 06            [ 2] 1049 	ldw	x, (0x06, sp)
+      0005D5 A3 03 02         [ 2] 1050 	cpw	x, #0x0302
+      0005D8 27 18            [ 1] 1051 	jreq	00112$
+      0005DA 1E 06            [ 2] 1052 	ldw	x, (0x06, sp)
+      0005DC A3 03 01         [ 2] 1053 	cpw	x, #0x0301
+      0005DF 27 11            [ 1] 1054 	jreq	00112$
+      0005E1 AEr07r43         [ 2] 1055 	ldw	x, #___str_0+0
+      0005E4 4B AE            [ 1] 1056 	push	#0xae
+      0005E6 4B 02            [ 1] 1057 	push	#0x02
+      0005E8 4B 00            [ 1] 1058 	push	#0x00
+      0005EA 4B 00            [ 1] 1059 	push	#0x00
+      0005EC 89               [ 2] 1060 	pushw	x
+      0005ED CDr00r00         [ 4] 1061 	call	_assert_failed
+      0005F0 5B 06            [ 2] 1062 	addw	sp, #6
+      0005F2                       1063 00112$:
+                                   1064 ;	lib/stm8s_i2c.c: 689: regindex = (uint8_t)((uint16_t)I2C_Flag >> 8);
+      0005F2 7B 06            [ 1] 1065 	ld	a, (0x06, sp)
+      0005F4 0F 01            [ 1] 1066 	clr	(0x01, sp)
+                                   1067 ;	lib/stm8s_i2c.c: 691: switch (regindex)
+      0005F6 A1 01            [ 1] 1068 	cp	a, #0x01
+      0005F8 27 0A            [ 1] 1069 	jreq	00101$
+      0005FA A1 02            [ 1] 1070 	cp	a, #0x02
+      0005FC 27 0E            [ 1] 1071 	jreq	00102$
+      0005FE A1 03            [ 1] 1072 	cp	a, #0x03
+      000600 27 12            [ 1] 1073 	jreq	00103$
+      000602 20 16            [ 2] 1074 	jra	00105$
+                                   1075 ;	lib/stm8s_i2c.c: 694: case 0x01:
+      000604                       1076 00101$:
+                                   1077 ;	lib/stm8s_i2c.c: 695: tempreg = (uint8_t)I2C->SR1;
+      000604 AE 52 17         [ 2] 1078 	ldw	x, #0x5217
+      000607 F6               [ 1] 1079 	ld	a, (x)
+      000608 6B 03            [ 1] 1080 	ld	(0x03, sp), a
+                                   1081 ;	lib/stm8s_i2c.c: 696: break;
+      00060A 20 0E            [ 2] 1082 	jra	00105$
+                                   1083 ;	lib/stm8s_i2c.c: 699: case 0x02:
+      00060C                       1084 00102$:
+                                   1085 ;	lib/stm8s_i2c.c: 700: tempreg = (uint8_t)I2C->SR2;
+      00060C AE 52 18         [ 2] 1086 	ldw	x, #0x5218
+      00060F F6               [ 1] 1087 	ld	a, (x)
+      000610 6B 03            [ 1] 1088 	ld	(0x03, sp), a
+                                   1089 ;	lib/stm8s_i2c.c: 701: break;
+      000612 20 06            [ 2] 1090 	jra	00105$
+                                   1091 ;	lib/stm8s_i2c.c: 704: case 0x03:
+      000614                       1092 00103$:
+                                   1093 ;	lib/stm8s_i2c.c: 705: tempreg = (uint8_t)I2C->SR3;
+      000614 AE 52 19         [ 2] 1094 	ldw	x, #0x5219
+      000617 F6               [ 1] 1095 	ld	a, (x)
+      000618 6B 03            [ 1] 1096 	ld	(0x03, sp), a
+                                   1097 ;	lib/stm8s_i2c.c: 710: }
+      00061A                       1098 00105$:
+                                   1099 ;	lib/stm8s_i2c.c: 713: if ((tempreg & (uint8_t)I2C_Flag ) != 0)
+      00061A 7B 07            [ 1] 1100 	ld	a, (0x07, sp)
+      00061C 14 03            [ 1] 1101 	and	a, (0x03, sp)
+      00061E 4D               [ 1] 1102 	tnz	a
+      00061F 27 03            [ 1] 1103 	jreq	00107$
+                                   1104 ;	lib/stm8s_i2c.c: 716: bitstatus = SET;
+      000621 A6 01            [ 1] 1105 	ld	a, #0x01
+                                   1106 ;	lib/stm8s_i2c.c: 721: bitstatus = RESET;
+      000623 21                    1107 	.byte 0x21
+      000624                       1108 00107$:
+      000624 4F               [ 1] 1109 	clr	a
+      000625                       1110 00108$:
+                                   1111 ;	lib/stm8s_i2c.c: 724: return bitstatus;
+      000625 5B 03            [ 2] 1112 	addw	sp, #3
+      000627 81               [ 4] 1113 	ret
+                                   1114 ;	lib/stm8s_i2c.c: 759: void I2C_ClearFlag(I2C_Flag_TypeDef I2C_FLAG)
+                                   1115 ;	-----------------------------------------
+                                   1116 ;	 function I2C_ClearFlag
+                                   1117 ;	-----------------------------------------
+      000628                       1118 _I2C_ClearFlag:
+                                   1119 ;	lib/stm8s_i2c.c: 763: assert_param(IS_I2C_CLEAR_FLAG_OK(I2C_FLAG));
+      000628 7B 03            [ 1] 1120 	ld	a, (0x03, sp)
+      00062A A5 FD            [ 1] 1121 	bcp	a, #0xfd
+      00062C 26 04            [ 1] 1122 	jrne	00103$
+      00062E 1E 03            [ 2] 1123 	ldw	x, (0x03, sp)
+      000630 26 11            [ 1] 1124 	jrne	00104$
+      000632                       1125 00103$:
+      000632 AEr07r43         [ 2] 1126 	ldw	x, #___str_0+0
+      000635 4B FB            [ 1] 1127 	push	#0xfb
+      000637 4B 02            [ 1] 1128 	push	#0x02
+      000639 4B 00            [ 1] 1129 	push	#0x00
+      00063B 4B 00            [ 1] 1130 	push	#0x00
+      00063D 89               [ 2] 1131 	pushw	x
+      00063E CDr00r00         [ 4] 1132 	call	_assert_failed
+      000641 5B 06            [ 2] 1133 	addw	sp, #6
+      000643                       1134 00104$:
+                                   1135 ;	lib/stm8s_i2c.c: 766: flagpos = (uint16_t)I2C_FLAG & FLAG_Mask;
+      000643 7B 04            [ 1] 1136 	ld	a, (0x04, sp)
+      000645 97               [ 1] 1137 	ld	xl, a
+      000646 4F               [ 1] 1138 	clr	a
+                                   1139 ;	lib/stm8s_i2c.c: 768: I2C->SR2 = (uint8_t)((uint16_t)(~flagpos));
+      000647 95               [ 1] 1140 	ld	xh, a
+      000648 53               [ 2] 1141 	cplw	x
+      000649 9F               [ 1] 1142 	ld	a, xl
+      00064A AE 52 18         [ 2] 1143 	ldw	x, #0x5218
+      00064D F7               [ 1] 1144 	ld	(x), a
+      00064E 81               [ 4] 1145 	ret
+                                   1146 ;	lib/stm8s_i2c.c: 791: ITStatus I2C_GetITStatus(I2C_ITPendingBit_TypeDef I2C_ITPendingBit)
+                                   1147 ;	-----------------------------------------
+                                   1148 ;	 function I2C_GetITStatus
+                                   1149 ;	-----------------------------------------
+      00064F                       1150 _I2C_GetITStatus:
+      00064F 89               [ 2] 1151 	pushw	x
+                                   1152 ;	lib/stm8s_i2c.c: 794: __IO uint8_t enablestatus = 0;
+      000650 0F 01            [ 1] 1153 	clr	(0x01, sp)
+                                   1154 ;	lib/stm8s_i2c.c: 798: assert_param(IS_I2C_ITPENDINGBIT_OK(I2C_ITPendingBit));
+      000652 1E 05            [ 2] 1155 	ldw	x, (0x05, sp)
+      000654 A3 16 80         [ 2] 1156 	cpw	x, #0x1680
+      000657 27 5E            [ 1] 1157 	jreq	00115$
+      000659 1E 05            [ 2] 1158 	ldw	x, (0x05, sp)
+      00065B A3 16 40         [ 2] 1159 	cpw	x, #0x1640
+      00065E 27 57            [ 1] 1160 	jreq	00115$
+      000660 1E 05            [ 2] 1161 	ldw	x, (0x05, sp)
+      000662 A3 12 10         [ 2] 1162 	cpw	x, #0x1210
+      000665 27 50            [ 1] 1163 	jreq	00115$
+      000667 1E 05            [ 2] 1164 	ldw	x, (0x05, sp)
+      000669 A3 12 08         [ 2] 1165 	cpw	x, #0x1208
+      00066C 27 49            [ 1] 1166 	jreq	00115$
+      00066E 1E 05            [ 2] 1167 	ldw	x, (0x05, sp)
+      000670 A3 12 04         [ 2] 1168 	cpw	x, #0x1204
+      000673 27 42            [ 1] 1169 	jreq	00115$
+      000675 1E 05            [ 2] 1170 	ldw	x, (0x05, sp)
+      000677 A3 12 02         [ 2] 1171 	cpw	x, #0x1202
+      00067A 27 3B            [ 1] 1172 	jreq	00115$
+      00067C 1E 05            [ 2] 1173 	ldw	x, (0x05, sp)
+      00067E A3 12 01         [ 2] 1174 	cpw	x, #0x1201
+      000681 27 34            [ 1] 1175 	jreq	00115$
+      000683 1E 05            [ 2] 1176 	ldw	x, (0x05, sp)
+      000685 A3 22 20         [ 2] 1177 	cpw	x, #0x2220
+      000688 27 2D            [ 1] 1178 	jreq	00115$
+      00068A 1E 05            [ 2] 1179 	ldw	x, (0x05, sp)
+      00068C A3 21 08         [ 2] 1180 	cpw	x, #0x2108
+      00068F 27 26            [ 1] 1181 	jreq	00115$
+      000691 1E 05            [ 2] 1182 	ldw	x, (0x05, sp)
+      000693 A3 21 04         [ 2] 1183 	cpw	x, #0x2104
+      000696 27 1F            [ 1] 1184 	jreq	00115$
+      000698 1E 05            [ 2] 1185 	ldw	x, (0x05, sp)
+      00069A A3 21 02         [ 2] 1186 	cpw	x, #0x2102
+      00069D 27 18            [ 1] 1187 	jreq	00115$
+      00069F 1E 05            [ 2] 1188 	ldw	x, (0x05, sp)
+      0006A1 A3 21 01         [ 2] 1189 	cpw	x, #0x2101
+      0006A4 27 11            [ 1] 1190 	jreq	00115$
+      0006A6 AEr07r43         [ 2] 1191 	ldw	x, #___str_0+0
+      0006A9 4B 1E            [ 1] 1192 	push	#0x1e
+      0006AB 4B 03            [ 1] 1193 	push	#0x03
+      0006AD 4B 00            [ 1] 1194 	push	#0x00
+      0006AF 4B 00            [ 1] 1195 	push	#0x00
+      0006B1 89               [ 2] 1196 	pushw	x
+      0006B2 CDr00r00         [ 4] 1197 	call	_assert_failed
+      0006B5 5B 06            [ 2] 1198 	addw	sp, #6
+      0006B7                       1199 00115$:
+                                   1200 ;	lib/stm8s_i2c.c: 800: tempregister = (uint8_t)( ((uint16_t)((uint16_t)I2C_ITPendingBit & ITEN_Mask)) >> 8);
+      0006B7 4F               [ 1] 1201 	clr	a
+      0006B8 7B 05            [ 1] 1202 	ld	a, (0x05, sp)
+      0006BA A4 07            [ 1] 1203 	and	a, #0x07
+      0006BC 97               [ 1] 1204 	ld	xl, a
+      0006BD 4F               [ 1] 1205 	clr	a
+      0006BE 4F               [ 1] 1206 	clr	a
+      0006BF 95               [ 1] 1207 	ld	xh, a
+                                   1208 ;	lib/stm8s_i2c.c: 803: enablestatus = (uint8_t)(I2C->ITR & ( uint8_t)tempregister);
+      0006C0 90 AE 52 1A      [ 2] 1209 	ldw	y, #0x521a
+      0006C4 90 F6            [ 1] 1210 	ld	a, (y)
+      0006C6 89               [ 2] 1211 	pushw	x
+      0006C7 14 02            [ 1] 1212 	and	a, (2, sp)
+      0006C9 85               [ 2] 1213 	popw	x
+      0006CA 6B 01            [ 1] 1214 	ld	(0x01, sp), a
+                                   1215 ;	lib/stm8s_i2c.c: 805: if ((uint16_t)((uint16_t)I2C_ITPendingBit & REGISTER_Mask) == REGISTER_SR1_Index)
+      0006CC 4F               [ 1] 1216 	clr	a
+      0006CD 97               [ 1] 1217 	ld	xl, a
+      0006CE 7B 05            [ 1] 1218 	ld	a, (0x05, sp)
+      0006D0 A4 30            [ 1] 1219 	and	a, #0x30
+      0006D2 95               [ 1] 1220 	ld	xh, a
+                                   1221 ;	lib/stm8s_i2c.c: 808: if (((I2C->SR1 & (uint8_t)I2C_ITPendingBit) != RESET) && enablestatus)
+      0006D3 7B 06            [ 1] 1222 	ld	a, (0x06, sp)
+      0006D5 6B 02            [ 1] 1223 	ld	(0x02, sp), a
+                                   1224 ;	lib/stm8s_i2c.c: 805: if ((uint16_t)((uint16_t)I2C_ITPendingBit & REGISTER_Mask) == REGISTER_SR1_Index)
+      0006D7 A3 01 00         [ 2] 1225 	cpw	x, #0x0100
+      0006DA 26 14            [ 1] 1226 	jrne	00110$
+                                   1227 ;	lib/stm8s_i2c.c: 808: if (((I2C->SR1 & (uint8_t)I2C_ITPendingBit) != RESET) && enablestatus)
+      0006DC AE 52 17         [ 2] 1228 	ldw	x, #0x5217
+      0006DF F6               [ 1] 1229 	ld	a, (x)
+      0006E0 14 02            [ 1] 1230 	and	a, (0x02, sp)
+      0006E2 4D               [ 1] 1231 	tnz	a
+      0006E3 27 08            [ 1] 1232 	jreq	00102$
+      0006E5 0D 01            [ 1] 1233 	tnz	(0x01, sp)
+      0006E7 27 04            [ 1] 1234 	jreq	00102$
+                                   1235 ;	lib/stm8s_i2c.c: 811: bitstatus = SET;
+      0006E9 A6 01            [ 1] 1236 	ld	a, #0x01
+      0006EB 20 14            [ 2] 1237 	jra	00111$
+      0006ED                       1238 00102$:
+                                   1239 ;	lib/stm8s_i2c.c: 816: bitstatus = RESET;
+      0006ED 4F               [ 1] 1240 	clr	a
+      0006EE 20 11            [ 2] 1241 	jra	00111$
+      0006F0                       1242 00110$:
+                                   1243 ;	lib/stm8s_i2c.c: 822: if (((I2C->SR2 & (uint8_t)I2C_ITPendingBit) != RESET) && enablestatus)
+      0006F0 AE 52 18         [ 2] 1244 	ldw	x, #0x5218
+      0006F3 F6               [ 1] 1245 	ld	a, (x)
+      0006F4 14 02            [ 1] 1246 	and	a, (0x02, sp)
+      0006F6 4D               [ 1] 1247 	tnz	a
+      0006F7 27 07            [ 1] 1248 	jreq	00106$
+      0006F9 0D 01            [ 1] 1249 	tnz	(0x01, sp)
+      0006FB 27 03            [ 1] 1250 	jreq	00106$
+                                   1251 ;	lib/stm8s_i2c.c: 825: bitstatus = SET;
+      0006FD A6 01            [ 1] 1252 	ld	a, #0x01
+                                   1253 ;	lib/stm8s_i2c.c: 830: bitstatus = RESET;
+      0006FF 21                    1254 	.byte 0x21
+      000700                       1255 00106$:
+      000700 4F               [ 1] 1256 	clr	a
+      000701                       1257 00111$:
+                                   1258 ;	lib/stm8s_i2c.c: 834: return  bitstatus;
+      000701 85               [ 2] 1259 	popw	x
+      000702 81               [ 4] 1260 	ret
+                                   1261 ;	lib/stm8s_i2c.c: 871: void I2C_ClearITPendingBit(I2C_ITPendingBit_TypeDef I2C_ITPendingBit)
+                                   1262 ;	-----------------------------------------
+                                   1263 ;	 function I2C_ClearITPendingBit
+                                   1264 ;	-----------------------------------------
+      000703                       1265 _I2C_ClearITPendingBit:
+                                   1266 ;	lib/stm8s_i2c.c: 876: assert_param(IS_I2C_CLEAR_ITPENDINGBIT_OK(I2C_ITPendingBit));
+      000703 1E 03            [ 2] 1267 	ldw	x, (0x03, sp)
+      000705 A3 22 20         [ 2] 1268 	cpw	x, #0x2220
+      000708 27 2D            [ 1] 1269 	jreq	00104$
+      00070A 1E 03            [ 2] 1270 	ldw	x, (0x03, sp)
+      00070C A3 21 08         [ 2] 1271 	cpw	x, #0x2108
+      00070F 27 26            [ 1] 1272 	jreq	00104$
+      000711 1E 03            [ 2] 1273 	ldw	x, (0x03, sp)
+      000713 A3 21 04         [ 2] 1274 	cpw	x, #0x2104
+      000716 27 1F            [ 1] 1275 	jreq	00104$
+      000718 1E 03            [ 2] 1276 	ldw	x, (0x03, sp)
+      00071A A3 21 02         [ 2] 1277 	cpw	x, #0x2102
+      00071D 27 18            [ 1] 1278 	jreq	00104$
+      00071F 1E 03            [ 2] 1279 	ldw	x, (0x03, sp)
+      000721 A3 21 01         [ 2] 1280 	cpw	x, #0x2101
+      000724 27 11            [ 1] 1281 	jreq	00104$
+      000726 AEr07r43         [ 2] 1282 	ldw	x, #___str_0+0
+      000729 4B 6C            [ 1] 1283 	push	#0x6c
+      00072B 4B 03            [ 1] 1284 	push	#0x03
+      00072D 4B 00            [ 1] 1285 	push	#0x00
+      00072F 4B 00            [ 1] 1286 	push	#0x00
+      000731 89               [ 2] 1287 	pushw	x
+      000732 CDr00r00         [ 4] 1288 	call	_assert_failed
+      000735 5B 06            [ 2] 1289 	addw	sp, #6
+      000737                       1290 00104$:
+                                   1291 ;	lib/stm8s_i2c.c: 879: flagpos = (uint16_t)I2C_ITPendingBit & FLAG_Mask;
+      000737 7B 04            [ 1] 1292 	ld	a, (0x04, sp)
+      000739 97               [ 1] 1293 	ld	xl, a
+      00073A 4F               [ 1] 1294 	clr	a
+                                   1295 ;	lib/stm8s_i2c.c: 882: I2C->SR2 = (uint8_t)((uint16_t)~flagpos);
+      00073B 95               [ 1] 1296 	ld	xh, a
+      00073C 53               [ 2] 1297 	cplw	x
+      00073D 9F               [ 1] 1298 	ld	a, xl
+      00073E AE 52 18         [ 2] 1299 	ldw	x, #0x5218
+      000741 F7               [ 1] 1300 	ld	(x), a
+      000742 81               [ 4] 1301 	ret
+                                   1302 	.area CODE
+      000743                       1303 ___str_0:
+      000743 6C 69 62 2F 73 74 6D  1304 	.ascii "lib/stm8s_i2c.c"
+             38 73 5F 69 32 63 2E
+             63
+      000752 00                    1305 	.db 0x00
+                                   1306 	.area INITIALIZER
+                                   1307 	.area CABS (ABS)

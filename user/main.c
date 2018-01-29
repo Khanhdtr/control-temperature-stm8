@@ -43,7 +43,7 @@ void clock_setup(void)
    CLK_PeripheralClockConfig(CLK_PERIPHERAL_I2C, ENABLE);
    CLK_PeripheralClockConfig(CLK_PERIPHERAL_ADC, DISABLE);
    CLK_PeripheralClockConfig(CLK_PERIPHERAL_AWU, DISABLE);
-   CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, DISABLE);
+   CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, ENABLE);
    CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER1, DISABLE);
    CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER2, DISABLE);
    CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER4, ENABLE);
@@ -108,7 +108,7 @@ void main()
   unsigned int tmp = 0x0000;
   clock_setup();
   GPIO_setup();
-//  I2C_setup();
+  I2C_setup();
  // BH1750_init();
   TIMER_Init();
   SetupSerialPort();
@@ -119,8 +119,8 @@ void main()
   {
          Led_manager ();
          Printf("Hello from my program");
-  /*       tmp = get_lux_value(cont_L_res_mode, 20);
-        
+       /*  tmp = get_lux_value(cont_L_res_mode, 20);
+         //Printf(tmp);
          if(tmp > 10)
          {
              LX = tmp;
@@ -128,8 +128,10 @@ void main()
          else
          {
              LX = get_lux_value(cont_H_res_mode1, 140);
+
          }
          */
+         
   }
   
 }

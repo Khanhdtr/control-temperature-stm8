@@ -206,8 +206,8 @@
       000059 4B 12            [ 1]  206 	push	#0x12
       00005B CDr00r00         [ 4]  207 	call	_CLK_PeripheralClockConfig
       00005E 85               [ 2]  208 	popw	x
-                                    209 ;	user/main.c: 46: CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, DISABLE);
-      00005F 4B 00            [ 1]  210 	push	#0x00
+                                    209 ;	user/main.c: 46: CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, ENABLE);
+      00005F 4B 01            [ 1]  210 	push	#0x01
       000061 4B 03            [ 1]  211 	push	#0x03
       000063 CDr00r00         [ 4]  212 	call	_CLK_PeripheralClockConfig
       000066 85               [ 2]  213 	popw	x
@@ -351,35 +351,37 @@
       000123 CDr00r00         [ 4]  351 	call	_clock_setup
                                     352 ;	user/main.c: 110: GPIO_setup();
       000126 CDr00rC1         [ 4]  353 	call	_GPIO_setup
-                                    354 ;	user/main.c: 113: TIMER_Init();
-      000129 CDr00r00         [ 4]  355 	call	_TIMER_Init
-                                    356 ;	user/main.c: 114: SetupSerialPort();
-      00012C CDr00r00         [ 4]  357 	call	_SetupSerialPort
-                                    358 ;	user/main.c: 116: enableInterrupts();
-      00012F 9A               [ 1]  359 	rim
-                                    360 ;	user/main.c: 117: TIMER_InitTime(&tick);
-      000130 AEr00r00         [ 2]  361 	ldw	x, #_tick+0
-      000133 89               [ 2]  362 	pushw	x
-      000134 CDr00r00         [ 4]  363 	call	_TIMER_InitTime
-      000137 85               [ 2]  364 	popw	x
-                                    365 ;	user/main.c: 118: while(1)
-      000138                        366 00102$:
-                                    367 ;	user/main.c: 120: Led_manager ();
-      000138 CDr00rE9         [ 4]  368 	call	_Led_manager
-                                    369 ;	user/main.c: 121: Printf("Hello from my program");
-      00013B AEr01r46         [ 2]  370 	ldw	x, #___str_0+0
-      00013E 89               [ 2]  371 	pushw	x
-      00013F CDr00r00         [ 4]  372 	call	_Printf
-      000142 85               [ 2]  373 	popw	x
-      000143 20 F3            [ 2]  374 	jra	00102$
-      000145 81               [ 4]  375 	ret
-                                    376 	.area CODE
-      000146                        377 ___str_0:
-      000146 48 65 6C 6C 6F 20 66   378 	.ascii "Hello from my program"
+                                    354 ;	user/main.c: 111: I2C_setup();
+      000129 CDr00r8B         [ 4]  355 	call	_I2C_setup
+                                    356 ;	user/main.c: 113: TIMER_Init();
+      00012C CDr00r00         [ 4]  357 	call	_TIMER_Init
+                                    358 ;	user/main.c: 114: SetupSerialPort();
+      00012F CDr00r00         [ 4]  359 	call	_SetupSerialPort
+                                    360 ;	user/main.c: 116: enableInterrupts();
+      000132 9A               [ 1]  361 	rim
+                                    362 ;	user/main.c: 117: TIMER_InitTime(&tick);
+      000133 AEr00r00         [ 2]  363 	ldw	x, #_tick+0
+      000136 89               [ 2]  364 	pushw	x
+      000137 CDr00r00         [ 4]  365 	call	_TIMER_InitTime
+      00013A 85               [ 2]  366 	popw	x
+                                    367 ;	user/main.c: 118: while(1)
+      00013B                        368 00102$:
+                                    369 ;	user/main.c: 120: Led_manager ();
+      00013B CDr00rE9         [ 4]  370 	call	_Led_manager
+                                    371 ;	user/main.c: 121: Printf("Hello from my program");
+      00013E AEr01r49         [ 2]  372 	ldw	x, #___str_0+0
+      000141 89               [ 2]  373 	pushw	x
+      000142 CDr00r00         [ 4]  374 	call	_Printf
+      000145 85               [ 2]  375 	popw	x
+      000146 20 F3            [ 2]  376 	jra	00102$
+      000148 81               [ 4]  377 	ret
+                                    378 	.area CODE
+      000149                        379 ___str_0:
+      000149 48 65 6C 6C 6F 20 66   380 	.ascii "Hello from my program"
              72 6F 6D 20 6D 79 20
              70 72 6F 67 72 61 6D
-      00015B 00                     379 	.db 0x00
-                                    380 	.area INITIALIZER
-      000000                        381 __xinit__ToggleVar:
-      000000 01                     382 	.db #0x01	; 1
-                                    383 	.area CABS (ABS)
+      00015E 00                     381 	.db 0x00
+                                    382 	.area INITIALIZER
+      000000                        383 __xinit__ToggleVar:
+      000000 01                     384 	.db #0x01	; 1
+                                    385 	.area CABS (ABS)

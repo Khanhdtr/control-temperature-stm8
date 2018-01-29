@@ -1,5 +1,5 @@
 #include "STM8S.h"
- 
+#include "stm8s_i2c.h"
  
 #define   BH1750_addr                             0x46
          

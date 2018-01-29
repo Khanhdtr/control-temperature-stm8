@@ -164,13 +164,13 @@ _BH1750_read_word:
 ;	user/bh1750.c: 40: unsigned char bytes[2] = {0x00, 0x00};
 	ldw	x, sp
 	incw	x
-	ldw	(0x04, sp), x
-	ldw	x, (0x04, sp)
+	ldw	(0x0b, sp), x
+	ldw	x, (0x0b, sp)
 	clr	(x)
-	ldw	x, (0x04, sp)
+	ldw	x, (0x0b, sp)
 	incw	x
-	ldw	(0x06, sp), x
-	ldw	x, (0x06, sp)
+	ldw	(0x09, sp), x
+	ldw	x, (0x09, sp)
 	clr	(x)
 ;	user/bh1750.c: 42: while(I2C_GetFlagStatus(I2C_FLAG_BUSBUSY));
 00101$:
@@ -235,7 +235,7 @@ _BH1750_read_word:
 	clrw	x
 	ld	a, (0x08, sp)
 	ld	xl, a
-	addw	x, (0x04, sp)
+	addw	x, (0x0b, sp)
 	pushw	x
 	call	_I2C_ReceiveData
 	popw	x
@@ -246,18 +246,18 @@ _BH1750_read_word:
 	jra	00114$
 00116$:
 ;	user/bh1750.c: 65: value = ((bytes[1] << 8) | bytes[0]);  
-	ldw	x, (0x06, sp)
+	ldw	x, (0x09, sp)
 	ld	a, (x)
 	ld	xh, a
 	clr	a
-	clr	(0x0a, sp)
-	ldw	y, (0x04, sp)
+	clr	(0x07, sp)
+	ldw	y, (0x0b, sp)
 	ld	a, (y)
-	clr	(0x0b, sp)
-	or	a, (0x0a, sp)
+	clr	(0x04, sp)
+	or	a, (0x07, sp)
 	ld	xl, a
 	ld	a, xh
-	or	a, (0x0b, sp)
+	or	a, (0x04, sp)
 	clrw	y
 	tnz	a
 	jrpl	00161$

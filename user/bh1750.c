@@ -1,5 +1,5 @@
 #include "BH1750.h"
- 
+#include "stm8s_i2c.h"
  
 void delay(uint16_t x)
 {

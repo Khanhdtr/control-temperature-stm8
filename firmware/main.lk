@@ -13,6 +13,7 @@ build/user/timerTick.rel
 build/user/uart.rel
 build/lib/stm8s_clk.rel
 build/lib/stm8s_gpio.rel
+build/lib/stm8s_i2c.rel
 build/lib/stm8s_tim4.rel
 
 -e

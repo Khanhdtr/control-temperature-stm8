@@ -206,8 +206,8 @@ _clock_setup:
 	push	#0x12
 	call	_CLK_PeripheralClockConfig
 	popw	x
-;	user/main.c: 46: CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, DISABLE);
-	push	#0x00
+;	user/main.c: 46: CLK_PeripheralClockConfig(CLK_PERIPHERAL_UART1, ENABLE);
+	push	#0x01
 	push	#0x03
 	call	_CLK_PeripheralClockConfig
 	popw	x
@@ -351,6 +351,8 @@ _main:
 	call	_clock_setup
 ;	user/main.c: 110: GPIO_setup();
 	call	_GPIO_setup
+;	user/main.c: 111: I2C_setup();
+	call	_I2C_setup
 ;	user/main.c: 113: TIMER_Init();
 	call	_TIMER_Init
 ;	user/main.c: 114: SetupSerialPort();

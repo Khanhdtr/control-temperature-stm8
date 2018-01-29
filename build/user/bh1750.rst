@@ -111,45 +111,45 @@
       0080D3                        111 _BH1750_write:
                                     112 ;	user/bh1750.c: 23: I2C_GenerateSTART(ENABLE);
       0080D3 4B 01            [ 1]  113 	push	#0x01
-      0080D5 CD 00 00         [ 4]  114 	call	_I2C_GenerateSTART
+      0080D5 CD 8B E3         [ 4]  114 	call	_I2C_GenerateSTART
       0080D8 84               [ 1]  115 	pop	a
                                     116 ;	user/bh1750.c: 24: while(!I2C_CheckEvent(I2C_EVENT_MASTER_MODE_SELECT));
       0080D9                        117 00101$:
       0080D9 4B 01            [ 1]  118 	push	#0x01
       0080DB 4B 03            [ 1]  119 	push	#0x03
-      0080DD CD 00 00         [ 4]  120 	call	_I2C_CheckEvent
+      0080DD CD 8D E7         [ 4]  120 	call	_I2C_CheckEvent
       0080E0 85               [ 2]  121 	popw	x
       0080E1 4D               [ 1]  122 	tnz	a
       0080E2 27 F5            [ 1]  123 	jreq	00101$
                                     124 ;	user/bh1750.c: 26: I2C_Send7bitAddress(BH1750_addr, I2C_DIRECTION_TX); 
       0080E4 4B 00            [ 1]  125 	push	#0x00
       0080E6 4B 46            [ 1]  126 	push	#0x46
-      0080E8 CD 00 00         [ 4]  127 	call	_I2C_Send7bitAddress
+      0080E8 CD 8D A0         [ 4]  127 	call	_I2C_Send7bitAddress
       0080EB 85               [ 2]  128 	popw	x
                                     129 ;	user/bh1750.c: 27: while(!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
       0080EC                        130 00104$:
       0080EC 4B 82            [ 1]  131 	push	#0x82
       0080EE 4B 07            [ 1]  132 	push	#0x07
-      0080F0 CD 00 00         [ 4]  133 	call	_I2C_CheckEvent
+      0080F0 CD 8D E7         [ 4]  133 	call	_I2C_CheckEvent
       0080F3 85               [ 2]  134 	popw	x
       0080F4 4D               [ 1]  135 	tnz	a
       0080F5 27 F5            [ 1]  136 	jreq	00104$
                                     137 ;	user/bh1750.c: 29: I2C_SendData(cmd);
       0080F7 7B 03            [ 1]  138 	ld	a, (0x03, sp)
       0080F9 88               [ 1]  139 	push	a
-      0080FA CD 00 00         [ 4]  140 	call	_I2C_SendData
+      0080FA CD 8D E0         [ 4]  140 	call	_I2C_SendData
       0080FD 84               [ 1]  141 	pop	a
                                     142 ;	user/bh1750.c: 30: while(!I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTED));
       0080FE                        143 00107$:
       0080FE 4B 84            [ 1]  144 	push	#0x84
       008100 4B 07            [ 1]  145 	push	#0x07
-      008102 CD 00 00         [ 4]  146 	call	_I2C_CheckEvent
+      008102 CD 8D E7         [ 4]  146 	call	_I2C_CheckEvent
       008105 85               [ 2]  147 	popw	x
       008106 4D               [ 1]  148 	tnz	a
       008107 27 F5            [ 1]  149 	jreq	00107$
                                     150 ;	user/bh1750.c: 32: I2C_GenerateSTOP(ENABLE);   
       008109 4B 01            [ 1]  151 	push	#0x01
-      00810B CD 00 00         [ 4]  152 	call	_I2C_GenerateSTOP
+      00810B CD 8C 0C         [ 4]  152 	call	_I2C_GenerateSTOP
       00810E 84               [ 1]  153 	pop	a
       00810F 81               [ 4]  154 	ret
                                     155 ;	user/bh1750.c: 36: unsigned int BH1750_read_word(void)
@@ -164,44 +164,44 @@
                                     164 ;	user/bh1750.c: 40: unsigned char bytes[2] = {0x00, 0x00};
       008116 96               [ 1]  165 	ldw	x, sp
       008117 5C               [ 2]  166 	incw	x
-      008118 1F 04            [ 2]  167 	ldw	(0x04, sp), x
-      00811A 1E 04            [ 2]  168 	ldw	x, (0x04, sp)
+      008118 1F 0B            [ 2]  167 	ldw	(0x0b, sp), x
+      00811A 1E 0B            [ 2]  168 	ldw	x, (0x0b, sp)
       00811C 7F               [ 1]  169 	clr	(x)
-      00811D 1E 04            [ 2]  170 	ldw	x, (0x04, sp)
+      00811D 1E 0B            [ 2]  170 	ldw	x, (0x0b, sp)
       00811F 5C               [ 2]  171 	incw	x
-      008120 1F 06            [ 2]  172 	ldw	(0x06, sp), x
-      008122 1E 06            [ 2]  173 	ldw	x, (0x06, sp)
+      008120 1F 09            [ 2]  172 	ldw	(0x09, sp), x
+      008122 1E 09            [ 2]  173 	ldw	x, (0x09, sp)
       008124 7F               [ 1]  174 	clr	(x)
                                     175 ;	user/bh1750.c: 42: while(I2C_GetFlagStatus(I2C_FLAG_BUSBUSY));
       008125                        176 00101$:
       008125 4B 02            [ 1]  177 	push	#0x02
       008127 4B 03            [ 1]  178 	push	#0x03
-      008129 CD 00 00         [ 4]  179 	call	_I2C_GetFlagStatus
+      008129 CD 8E E8         [ 4]  179 	call	_I2C_GetFlagStatus
       00812C 85               [ 2]  180 	popw	x
       00812D 4D               [ 1]  181 	tnz	a
       00812E 26 F5            [ 1]  182 	jrne	00101$
                                     183 ;	user/bh1750.c: 44: I2C_GenerateSTART(ENABLE);
       008130 4B 01            [ 1]  184 	push	#0x01
-      008132 CD 00 00         [ 4]  185 	call	_I2C_GenerateSTART
+      008132 CD 8B E3         [ 4]  185 	call	_I2C_GenerateSTART
       008135 84               [ 1]  186 	pop	a
                                     187 ;	user/bh1750.c: 45: while(!I2C_CheckEvent(I2C_EVENT_MASTER_MODE_SELECT));
       008136                        188 00104$:
       008136 4B 01            [ 1]  189 	push	#0x01
       008138 4B 03            [ 1]  190 	push	#0x03
-      00813A CD 00 00         [ 4]  191 	call	_I2C_CheckEvent
+      00813A CD 8D E7         [ 4]  191 	call	_I2C_CheckEvent
       00813D 85               [ 2]  192 	popw	x
       00813E 4D               [ 1]  193 	tnz	a
       00813F 27 F5            [ 1]  194 	jreq	00104$
                                     195 ;	user/bh1750.c: 47: I2C_Send7bitAddress(BH1750_addr, I2C_DIRECTION_RX);
       008141 4B 01            [ 1]  196 	push	#0x01
       008143 4B 46            [ 1]  197 	push	#0x46
-      008145 CD 00 00         [ 4]  198 	call	_I2C_Send7bitAddress
+      008145 CD 8D A0         [ 4]  198 	call	_I2C_Send7bitAddress
       008148 85               [ 2]  199 	popw	x
                                     200 ;	user/bh1750.c: 48: while(!I2C_CheckEvent(I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
       008149                        201 00107$:
       008149 4B 02            [ 1]  202 	push	#0x02
       00814B 4B 03            [ 1]  203 	push	#0x03
-      00814D CD 00 00         [ 4]  204 	call	_I2C_CheckEvent
+      00814D CD 8D E7         [ 4]  204 	call	_I2C_CheckEvent
       008150 85               [ 2]  205 	popw	x
       008151 4D               [ 1]  206 	tnz	a
       008152 27 F5            [ 1]  207 	jreq	00107$
@@ -212,7 +212,7 @@
                                     212 ;	user/bh1750.c: 52: if(I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_RECEIVED))
       008158 4B 40            [ 1]  213 	push	#0x40
       00815A 4B 03            [ 1]  214 	push	#0x03
-      00815C CD 00 00         [ 4]  215 	call	_I2C_CheckEvent
+      00815C CD 8D E7         [ 4]  215 	call	_I2C_CheckEvent
       00815F 85               [ 2]  216 	popw	x
       008160 4D               [ 1]  217 	tnz	a
       008161 27 F1            [ 1]  218 	jreq	00114$
@@ -221,11 +221,11 @@
       008165 26 0C            [ 1]  221 	jrne	00111$
                                     222 ;	user/bh1750.c: 56: I2C_AcknowledgeConfig(I2C_ACK_NONE);
       008167 4B 00            [ 1]  223 	push	#0x00
-      008169 CD 00 00         [ 4]  224 	call	_I2C_AcknowledgeConfig
+      008169 CD 8C 8D         [ 4]  224 	call	_I2C_AcknowledgeConfig
       00816C 84               [ 1]  225 	pop	a
                                     226 ;	user/bh1750.c: 57: I2C_GenerateSTOP(ENABLE);   
       00816D 4B 01            [ 1]  227 	push	#0x01
-      00816F CD 00 00         [ 4]  228 	call	_I2C_GenerateSTOP
+      00816F CD 8C 0C         [ 4]  228 	call	_I2C_GenerateSTOP
       008172 84               [ 1]  229 	pop	a
       008173                        230 00111$:
                                     231 ;	user/bh1750.c: 60: bytes[(num_of_bytes - 1)] = I2C_ReceiveData();
@@ -235,9 +235,9 @@
       008178 5F               [ 1]  235 	clrw	x
       008179 7B 08            [ 1]  236 	ld	a, (0x08, sp)
       00817B 97               [ 1]  237 	ld	xl, a
-      00817C 72 FB 04         [ 2]  238 	addw	x, (0x04, sp)
+      00817C 72 FB 0B         [ 2]  238 	addw	x, (0x0b, sp)
       00817F 89               [ 2]  239 	pushw	x
-      008180 CD 00 00         [ 4]  240 	call	_I2C_ReceiveData
+      008180 CD 8D 9B         [ 4]  240 	call	_I2C_ReceiveData
       008183 85               [ 2]  241 	popw	x
       008184 F7               [ 1]  242 	ld	(x), a
                                     243 ;	user/bh1750.c: 61: num_of_bytes--;
@@ -246,18 +246,18 @@
       008189 20 C9            [ 2]  246 	jra	00114$
       00818B                        247 00116$:
                                     248 ;	user/bh1750.c: 65: value = ((bytes[1] << 8) | bytes[0]);  
-      00818B 1E 06            [ 2]  249 	ldw	x, (0x06, sp)
+      00818B 1E 09            [ 2]  249 	ldw	x, (0x09, sp)
       00818D F6               [ 1]  250 	ld	a, (x)
       00818E 95               [ 1]  251 	ld	xh, a
       00818F 4F               [ 1]  252 	clr	a
-      008190 0F 0A            [ 1]  253 	clr	(0x0a, sp)
-      008192 16 04            [ 2]  254 	ldw	y, (0x04, sp)
+      008190 0F 07            [ 1]  253 	clr	(0x07, sp)
+      008192 16 0B            [ 2]  254 	ldw	y, (0x0b, sp)
       008194 90 F6            [ 1]  255 	ld	a, (y)
-      008196 0F 0B            [ 1]  256 	clr	(0x0b, sp)
-      008198 1A 0A            [ 1]  257 	or	a, (0x0a, sp)
+      008196 0F 04            [ 1]  256 	clr	(0x04, sp)
+      008198 1A 07            [ 1]  257 	or	a, (0x07, sp)
       00819A 97               [ 1]  258 	ld	xl, a
       00819B 9E               [ 1]  259 	ld	a, xh
-      00819C 1A 0B            [ 1]  260 	or	a, (0x0b, sp)
+      00819C 1A 04            [ 1]  260 	or	a, (0x04, sp)
       00819E 90 5F            [ 1]  261 	clrw	y
       0081A0 4D               [ 1]  262 	tnz	a
       0081A1 2A 02            [ 1]  263 	jrpl	00161$
